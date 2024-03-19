@@ -124,6 +124,10 @@ func (server *Server) HandleFavoirte(w http.ResponseWriter, r *http.Request) {
 	page, _ := server.Get(id)
 	page.ToggleFavoirte(profile)
 	server.update(page)
+	if page.isFavoirte(profile) {
+		page.FavouritedByUser = true
+	}
+	server.Render(w, "favourite_btn", page)
 }
 
 func (server *Server) HandleAdd(w http.ResponseWriter, r *http.Request) {
