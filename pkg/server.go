@@ -78,6 +78,8 @@ func (server *Server) HandleEdit(w http.ResponseWriter, r *http.Request) {
 		page.Description = description
 		page.Tags = tags
 		server.Save(page, profile)
+		server.Render(w, "edit_success_alert", page)
+		return
 	}
 	server.Render(w, "edit", page)
 }
@@ -115,7 +117,7 @@ func (server *Server) HandleCreate(w http.ResponseWriter, r *http.Request) {
 func (server *Server) HandleDelete(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	server.Delete(id)
-	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	server.Render(w, "delete_success_alert", nil)
 }
 
 func (server *Server) HandleFavoirte(w http.ResponseWriter, r *http.Request) {
