@@ -1,0 +1,13 @@
+{{define "fav_btn"}}
+<button 
+    class="px-5 text-gray-600 text-sm rounded hover:bg-gray-100 hover:text-black"
+    data-hx-post="/link/{{.Id}}/fav" 
+    data-hx-swap="outerHTML"
+>
+    {{if .Favorited}}
+    {{template "star_solid_icon"}}
+    {{else}}
+    {{template "star_icon"}}
+    {{end}}
+</button>
+{{end}}

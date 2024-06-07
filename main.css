@@ -2,15 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
+body {
+    font-family: var(--font-libre_franklin), sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-libre_franklin), sans-serif;
+}
+
+body {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: #f2f2f2;
 }
 
-main{
+.search-bg {
+    background: url('https://tse1.mm.bing.net/th/id/OIG2.JznThGtCBZgI_sWefrWh?pid=ImgGn');
+    background-repeat: no-repeat;
+    background-color: #211f31;
+    background-size: cover;
+}
+
+main {
     flex-grow: 1;
     width: 100%;
-    overflow: auto;
+}
+
+footer {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
 }

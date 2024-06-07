@@ -9,5 +9,7 @@ LABEL org.opencontainers.image.source="https://github.com/robrotheram/bookquest"
 WORKDIR /app
 ADD app.sample.env /app/app.env
 COPY --from=GO_BUILDER /server/BookQuest /app/BookQuest
+ADD static /app/static
+ADD views /app/views
 EXPOSE 8090
 ENTRYPOINT ["./BookQuest"]

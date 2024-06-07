@@ -1,0 +1,57 @@
+{{define "edit_team_dashboard"}}
+<!DOCTYPE html>
+<html lang="en">
+{{template "head" .}}
+<body>
+    <div class="flex min-h-screen w-full">
+        {{template "sidebar"}}
+        <div class="flex flex-1 flex-col">
+            {{template "topnav"}}
+            <main class="flex-1 overflow-y-auto px-6 py-8">
+              {{template "team_edit" .}}
+            </main>
+        </div>
+    </div>
+</body>
+</html>
+{{end}}
+
+{{define "teams_dashboard"}}
+<!DOCTYPE html>
+<html lang="en">
+{{template "head" .}}
+
+<body>
+    <div class="flex min-h-screen w-full">
+        {{template "sidebar"}}
+        <div class="flex flex-1 flex-col">
+            {{template "topnav"}}
+            <main class="flex-1 overflow-y-auto px-6 flex flex-col divide-y">
+                <section class="py-6">
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-xl font-semibold">Teams</h2>
+                            <div class="flex items-center gap-4">
+                                <input
+                                    class="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-72"
+                                    placeholder="Search teams..." type="search" />
+                                <a href="/dashboard/team" class="whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 rounded-md">
+                                    Create Team
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-4">
+                        {{ range . }}
+                            {{template "team" .}}
+                        {{ end }}
+                    </div>
+                </section>
+                
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>
+{{end}}
