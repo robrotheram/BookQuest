@@ -2,60 +2,62 @@
 <!DOCTYPE html>
 <html lang="en">
 {{template "head" .}}
-
 <body>
   <div class="flex min-h-screen w-full">
     {{template "sidebar"}}
     <div class="flex flex-1 flex-col">
-      {{template "topnav"}}
-      <main class="flex-1 overflow-y-auto px-6 py-8">
-        <div class="flex flex-col rounded-lg border bg-card text-card-foreground shadow-sm p-6 divide-y mb-4">
-          <section class="space-y-4">
-            <h1 class="text-3xl font-bold">Create Team</h1>
-            <div id="message"></div>
-            <form class="space-y-6" hx-put="/dashboard/team" hx-target="#message">
-              <div class="space-y-2">
-                <label
-                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  for="name">
-                  Team Name
-                </label>
-                <input
-                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  name="name" placeholder="Enter team name"/>
-              </div>
-              <div class="space-y-2">
-                <label
-                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  for="description">
-                  Description
-                </label>
-                <textarea
-                  class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[100px]"
-                  name="description" placeholder="Enter team description"></textarea>
-              </div>
-              <section class="flex justify-end">
-                <button
-                  class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 rounded-md"
-                  type="submit">
-                  Create
-                </button>
-              </section>
-            </form>
-            <script>
-              document.addEventListener("htmx:afterOnLoad", function(evt) {
-                  var redirectUrl = evt.detail.xhr.getResponseHeader("HX-Redirect");
-                  if (redirectUrl) {
-                      window.location.href = redirectUrl;
-                  }
-              });
-          </script>
-          </section>
-        </div>
-      </main>
+      {{template "topnav" .User}}
+      {{template "create_team_content" .Data}}      
     </div>
   </div>
 </body>
-
 </html>
+{{end}}
+
+{{define "create_team_content"}}
+<main class="flex-1 overflow-y-auto px-6 py-8">
+  <div class="flex flex-col rounded-lg border bg-card text-card-foreground shadow-sm p-6 divide-y mb-4">
+    <section class="space-y-4">
+      <h1 class="text-3xl font-bold">Create Team</h1>
+      <div id="message"></div>
+      <form class="space-y-6" hx-put="/dashboard/team" hx-target="#message">
+        <div class="space-y-2">
+          <label
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            for="name">
+            Team Name
+          </label>
+          <input
+            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            name="name" placeholder="Enter team name"/>
+        </div>
+        <div class="space-y-2">
+          <label
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            for="description">
+            Description
+          </label>
+          <textarea
+            class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[100px]"
+            name="description" placeholder="Enter team description"></textarea>
+        </div>
+        <section class="flex justify-end">
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 rounded-md"
+            type="submit">
+            Create
+          </button>
+        </section>
+      </form>
+      <script>
+        document.addEventListener("htmx:afterOnLoad", function(evt) {
+            var redirectUrl = evt.detail.xhr.getResponseHeader("HX-Redirect");
+            if (redirectUrl) {
+                window.location.href = redirectUrl;
+            }
+        });
+    </script>
+    </section>
+  </div>
+</main>
 {{end}}

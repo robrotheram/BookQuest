@@ -44,6 +44,26 @@
                 type="text" name="url" value="{{.Link.Url}}" />
         </div>
     </div>
+
+    <div>
+        <label for="icon" class="block text-sm font-medium text-gray-700 ">
+            Website Icon
+        </label>
+        <div class="mt-1 flex gap-4 items-center">
+            <input id="icon" autocomplete="icon" required=""
+                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 "
+                type="text" name="icon" value="{{.Link.Icon}}" />
+            <button
+                class="items-center whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 flex justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+                hx-post="/dashboard/link/icon"
+                hx-target="#icon"
+                hx-swap="outerHTML"
+            >auto detect</button>
+        </div>
+    </div>
+
+
+
     <div>
         <label for="description" class="block text-sm font-medium text-gray-700 ">
             Website Description

@@ -81,10 +81,10 @@ type TeamLink struct {
 }
 
 type UserToTeam struct {
-	UserID uuid.UUID `bun:"type:uuid,pk"`
-	User   *User     `bun:"rel:belongs-to,join:user_id=id"`
-	TeamId uuid.UUID `bun:"type:uuid,pk"`
-	Team   *Team     `bun:"rel:belongs-to,join:team_id=id"`
+	UserID     uuid.UUID `bun:"type:uuid,pk"`
+	User       *User     `bun:"rel:belongs-to,join:user_id=id"`
+	TeamId     uuid.UUID `bun:"type:uuid,pk"`
+	Team       *Team     `bun:"rel:belongs-to,join:team_id=id"`
 	Permission TeamPermission
 }
 
@@ -92,6 +92,7 @@ type User struct {
 	Id         uuid.UUID `bun:"type:uuid,pk,default:gen_random_uuid()"`
 	Username   string
 	Email      string
+	Picture    string
 	Links      []Link `bun:"m2m:user_to_links,join:User=Link"`
 	Favourites []Link `bun:"m2m:favourite_links,join:User=Link"`
 }
@@ -109,8 +110,6 @@ type UserToLink struct {
 	UserID uuid.UUID `bun:"type:uuid,pk"`
 	User   *User     `bun:"rel:belongs-to,join:user_id=id"`
 }
-
-
 
 type LinkMeta struct {
 	Id       uuid.UUID `bun:"type:uuid,pk,default:gen_random_uuid()"`

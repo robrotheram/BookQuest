@@ -1,21 +1,18 @@
-{{define "search_card"}}
-<div class="rounded-lg border shadow-sm bg-white text-gray-950 hover:shadow-lg transition-shadow flex flex-col justify-between  "
-    data-v0-t="card">
-    <div class="px-6 pt-6 space-y-2">
+{{define "search_card_header"}}
+    <a class="rounded-lg  text-gray-950 px-6 p-3" href="/link/{{.Link.Id}}">
         <div class="flex items-center gap-2">
-            <img src="https://news.ycombinator.com/y18.svg" alt="Blog Logo" width="24" height="24" class="h-6 w-6"
+            <img src="{{.Link.Icon}}" alt="Blog Logo" width="24" height="24" class="h-6 w-6"
                 style="aspect-ratio: 24 / 24; object-fit: cover;" />
-            <h3 class="text-lg font-medium">
-                <a class="hover:underline text-gray-950" href="/link/{{.Link.Id}}">
-                    {{.Title}}
-                </a>
-            </h3>
+            <h3 class="text-lg font-medium">{{.Title}}</h3>
         </div>
-        <p class="text-sm text-gray-500">{{.Description}}</p>
-    </div>
+        <p class="text-sm text-gray-500 overflow-hidden">{{.Url}}</p>
+    </a>
+{{end}}
+
+{{define "search_card_footer"}}
+    <div data-orientation="horizontal" role="none" class="shrink-0 bg-gray-100 h-[1px] w-full mb-2"></div>
     <section class="flex justify-between">
         <div class="flex flex-col items-start gap-2 pb-6">
-            <div data-orientation="horizontal" role="none" class="shrink-0 bg-gray-100 h-[1px] w-full my-2"></div>
             {{template "share_section" .}}
             <div class="flex items-center gap-2 px-6">
                 {{template "calendar_icon"}}
@@ -28,7 +25,6 @@
             {{template "fav_btn" .}}
         </div>
     </section>
-</div>
 {{end}}
 
 {{define "share_section"}}
@@ -43,5 +39,26 @@
     {{template "public_icon"}}
     <span class="text-sm text-gray-500">Public</span>
     {{end}}
+</div>
+{{end}}
+
+
+
+
+{{define "search_card"}}
+<div class="rounded-lg shadow-sm bg-white text-gray-950 hover:shadow-lg transition-shadow flex flex-col justify-between  "
+    data-v0-t="card">
+    {{template "search_card_header" .}}
+    <pre
+        class="px-6 pt-3 text-sm text-gray-500 w-full overflow-auto whitespace-pre-wrap max-h-36">{{.Description}}</pre>
+        {{template "search_card_footer" .}}
+</div>
+{{end}}
+
+{{define "search_card_small"}}
+<div class="rounded-lg shadow-sm bg-white text-gray-950 hover:shadow-lg transition-shadow flex flex-col justify-between  "
+    data-v0-t="card">
+    {{template "search_card_header" .}}
+    {{template "search_card_footer" .}}
 </div>
 {{end}}

@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -132,4 +133,18 @@ func ModifyUserToTeam(db *bun.DB, user string, teamId string, permission TeamPer
 func (t *Team) Update(team Team) {
 	t.Name = team.Name
 	t.Description = team.Description
+}
+
+func FilterTeams(teams []Team, query string) []Team {
+	var filteredItems []Team
+	if len(query) == 0 {
+		return teams
+	}
+	for _, item := range teams {
+		if strings.Contains(strings.ToLower(item.Name), query) ||
+			strings.Contains(strings.ToLower(item.Description), query) {
+			filteredItems = append(filteredItems, item)
+		}
+	}
+	return filteredItems
 }

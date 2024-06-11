@@ -22,7 +22,7 @@ func main() {
 					templateFS := os.DirFS(".")
 					staticFS := os.DirFS(".")
 					mux := BookQuest.NewServer(staticFS, templateFS)
-					logrus.Info("Starting server on :8090")
+					logrus.Info("Starting server on http://localhost:8090")
 					return http.ListenAndServe(":8090", mux)
 				},
 			},
@@ -35,6 +35,15 @@ func main() {
 						Usage: "create migration tables",
 						Action: func(c *cli.Context) error {
 							return Migrations.Create(BookQuest.DB())
+						},
+					},
+					{
+						Name:  "sample-data",
+						Usage: "Load sample data",
+						Action: func(c *cli.Context) error {
+							username := c.Args().Get(0)
+							email := c.Args().Get(1)
+							return Migrations.LoadExampleData(BookQuest.DB(), username, email)
 						},
 					},
 					{
@@ -76,7 +85,7 @@ func main() {
 						Name:  "create_sql",
 						Usage: "create up and down SQL migrations",
 						Action: func(c *cli.Context) error {
-							return Migrations.CreateGo(BookQuest.DB(), c.Args().Slice())
+							return Migrations.CreateSQL(BookQuest.DB(), c.Args().Slice())
 						},
 					},
 					{

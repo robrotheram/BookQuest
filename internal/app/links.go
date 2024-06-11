@@ -2,8 +2,9 @@ package app
 
 import (
 	"BookQuest/internal/auth"
+	"BookQuest/internal/icons"
 	"BookQuest/internal/models"
-	"log"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -32,7 +33,7 @@ func (app *App) HandleLinkCreateDashboard(w http.ResponseWriter, r *http.Request
 	user, _ := auth.GetUser(r)
 
 	teams, _ := models.GetTeamsByUser(app.db, user.Id)
-	app.Render(w, "link_create_dashboard", LinkEditData{
+	app.RenderPage(w, "link_create_dashboard", user, LinkEditData{
 		Link:  models.Link{},
 		Teams: teams,
 		Shareing: []models.ShareSettings{
@@ -64,7 +65,7 @@ func (app *App) HandleLinkEditDashboard(w http.ResponseWriter, r *http.Request) 
 		linkTeams, _ := models.GetTeamsByLink(app.db, id)
 		data.SelectedTeams = linkTeams
 	}
-	log.Println(app.Render(w, "link_edit_dashboard", data))
+	app.RenderPage(w, "link_edit_dashboard", user, data)
 }
 
 var decoder = schema.NewDecoder()
@@ -72,6 +73,26 @@ var decoder = schema.NewDecoder()
 type LinkCreation struct {
 	*models.Link
 	Teams []string `schema:"team[]"`
+}
+
+func (app *App) HandleGetIcon(w http.ResponseWriter, r *http.Request) {
+	if r.ParseForm() != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	url := r.PostForm["url"][0]
+	icon, err := icons.GetIcon(url)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	template := `
+	<input id="icon" autocomplete="icon" required=""
+                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 "
+                type="text" name="icon" value="%s" />
+	`
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(fmt.Sprintf(template, icon)))
 }
 
 func (app *App) HandleLinkCreation(w http.ResponseWriter, r *http.Request) {
@@ -148,7 +169,7 @@ func (app *App) HandleLinkEdit(w http.ResponseWriter, r *http.Request) {
 		for _, team := range create.Teams {
 			if models.AddLinkToTeam(app.db, link.Id.String(), team) != nil {
 				w.WriteHeader(http.StatusBadRequest)
-				app.Render(w, "edit_error_alert", nil)
+				app.RenderComponent(w, "edit_error_alert", nil)
 				return
 			}
 		}
@@ -156,9 +177,9 @@ func (app *App) HandleLinkEdit(w http.ResponseWriter, r *http.Request) {
 
 	if models.UpdateLink(app.db, link) != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		app.Render(w, "edit_error_alert", nil)
+		app.RenderComponent(w, "edit_error_alert", nil)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	app.Render(w, "edit_success_alert", nil)
+	app.RenderComponent(w, "edit_success_alert", nil)
 }

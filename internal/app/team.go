@@ -19,9 +19,11 @@ type TeamEditData struct {
 
 func (app *App) HandleTeamPage(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
+	user, _ := auth.GetUser(r)
+
 	team, _ := models.GetTeam(app.db, id)
 	users, _ := models.GetTeamPermissions(app.db, id)
-	app.Render(w, "edit_team_dashboard", TeamEditData{
+	app.RenderPage(w, "edit_team_dashboard", user, TeamEditData{
 		Team:     team,
 		Memebers: users,
 		Permissions: []models.TeamPermission{
@@ -37,7 +39,7 @@ func (app *App) HandleTeamMemberAdd(w http.ResponseWriter, r *http.Request) {
 
 	if r.ParseForm() != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		app.Render(w, "edit_error_alert", nil)
+		app.RenderComponent(w, "edit_error_alert", nil)
 		return
 	}
 	email := r.PostForm.Get("email")
@@ -47,18 +49,18 @@ func (app *App) HandleTeamMemberAdd(w http.ResponseWriter, r *http.Request) {
 	user, err := models.GetUserByEmail(app.db, email)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		app.Render(w, "edit_error_alert", nil)
+		app.RenderComponent(w, "edit_error_alert", nil)
 		return
 	}
 
 	if models.AddUserToTeam(app.db, user.Id, team.Id.String(), permission) != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		app.Render(w, "edit_error_alert", nil)
+		app.RenderComponent(w, "edit_error_alert", nil)
 		return
 	}
 
 	users, _ := models.GetTeamPermissions(app.db, team.Id.String())
-	app.Render(w, "team_members", TeamEditData{
+	app.RenderComponent(w, "team_members", TeamEditData{
 		Memebers: users,
 		Permissions: []models.TeamPermission{
 			models.OWNER,
@@ -88,13 +90,13 @@ func (app *App) HandleTeamMemberRemove(w http.ResponseWriter, r *http.Request) {
 	user, err := models.GetUserByEmail(app.db, email)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		app.Render(w, "edit_error_alert", nil)
+		app.RenderComponent(w, "edit_error_alert", nil)
 		return
 	}
 
 	if models.RemoveUserToTeam(app.db, user.Id.String(), team.Id.String()) != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		app.Render(w, "edit_error_alert", nil)
+		app.RenderComponent(w, "edit_error_alert", nil)
 		return
 	}
 
@@ -107,7 +109,7 @@ func (app *App) HandleTeamMemberEdit(w http.ResponseWriter, r *http.Request) {
 
 	if r.ParseForm() != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		app.Render(w, "edit_error_alert", nil)
+		app.RenderComponent(w, "edit_error_alert", nil)
 		return
 	}
 
@@ -117,18 +119,18 @@ func (app *App) HandleTeamMemberEdit(w http.ResponseWriter, r *http.Request) {
 	user, err := models.GetUserByEmail(app.db, email)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		app.Render(w, "edit_error_alert", nil)
+		app.RenderComponent(w, "edit_error_alert", nil)
 		return
 	}
 
 	if models.ModifyUserToTeam(app.db, user.Id.String(), team.Id.String(), permission) != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		app.Render(w, "edit_error_alert", nil)
+		app.RenderComponent(w, "edit_error_alert", nil)
 		return
 	}
 
 	users, _ := models.GetTeamPermissions(app.db, team.Id.String())
-	app.Render(w, "team_members", TeamEditData{
+	app.RenderComponent(w, "team_members", TeamEditData{
 		Team:     team,
 		Memebers: users,
 		Permissions: []models.TeamPermission{
@@ -139,7 +141,8 @@ func (app *App) HandleTeamMemberEdit(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *App) HandleCreateTeamPage(w http.ResponseWriter, r *http.Request) {
-	app.Render(w, "create_team_dashboard", nil)
+	user, _ := auth.GetUser(r)
+	app.RenderPage(w, "create_team_dashboard", user, nil)
 }
 
 func (app *App) HandleTeamCreate(w http.ResponseWriter, r *http.Request) {
@@ -163,7 +166,7 @@ func (app *App) HandleTeamCreate(w http.ResponseWriter, r *http.Request) {
 
 	if models.AddUserToTeam(app.db, user.Id, team.Id.String(), models.OWNER) != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		app.Render(w, "edit_error_alert", nil)
+		app.RenderComponent(w, "edit_error_alert", nil)
 		return
 	}
 	w.Header().Set("HX-Redirect", "/dashboard/team/"+team.Id.String())
@@ -176,7 +179,7 @@ func (app *App) HandleTeamEdit(w http.ResponseWriter, r *http.Request) {
 	var editTeam = models.Team{}
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		app.Render(w, "edit_error_alert", nil)
+		app.RenderComponent(w, "edit_error_alert", nil)
 		return
 	}
 	if r.ParseForm() != nil {
@@ -190,9 +193,9 @@ func (app *App) HandleTeamEdit(w http.ResponseWriter, r *http.Request) {
 	team.Update(editTeam)
 	if models.UpdateTeam(app.db, team) != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		app.Render(w, "edit_error_alert", nil)
+		app.RenderComponent(w, "edit_error_alert", nil)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	app.Render(w, "edit_success_alert", nil)
+	app.RenderComponent(w, "edit_success_alert", nil)
 }

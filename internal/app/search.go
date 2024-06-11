@@ -35,7 +35,7 @@ func (app *App) HandleSearch(w http.ResponseWriter, r *http.Request) {
 	// for i, result := range results {
 	// 	results[i].FavouritedByUser = result.isFavoirte(profile)
 	// }
-	err := app.Render(w, "search", SearchPage{
+	err := app.RenderPage(w, "search", user, SearchPage{
 		Form: FormData{
 			Value: query,
 		},

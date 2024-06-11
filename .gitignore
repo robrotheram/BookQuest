@@ -26,4 +26,4 @@ BookQuest
 # Go workspace file
 go.work
 
-___debug*
+__debug*

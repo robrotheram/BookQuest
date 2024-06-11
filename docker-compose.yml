@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  BookQuest:
+    image: your-application-image:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: BookQuest
+    environment:
+      DATABASE: postgresql://myuser:mypassword@postgres:5432/mydatabase
+      OIDC_SERVER: my-domain.zitadel.cloud
+      OIDC_CLIENT_ID: <EXAMPLE_CLIENT_ID>
+      SECRET__KEY: <EXAMPLE_SECRET_KEY>
+      OIDC_REDIRECT_URI: http://localhost:8089/auth/callback
+      LISTEN_PORT: 8090
+    ports:
+      - "8090:8090"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:

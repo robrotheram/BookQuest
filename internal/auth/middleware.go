@@ -25,6 +25,10 @@ func GetUser(r *http.Request) (models.User, error) {
 	return user, nil
 }
 
+func UpdateUser(db *bun.DB, user models.User) {
+
+}
+
 func AuthMiddleware(db *bun.DB, authN *authentication.Authenticator[*openid.UserInfoContext[*oidc.IDTokenClaims, *oidc.UserInfo]]) func(next http.Handler) http.Handler {
 
 	userCache := initCache()
@@ -44,16 +48,24 @@ func AuthMiddleware(db *bun.DB, authN *authentication.Authenticator[*openid.User
 						Id:       uuid.New(),
 						Email:    session.UserInfo.Email,
 						Username: session.UserInfo.Name,
+						Picture:  session.UserInfo.Picture,
 					}
-					err = models.CreateUser(db, user)
-					if err == nil {
-						userCache.SetUser(user)
-					}
+					models.CreateUser(db, user)
 				}
+				user.Picture = session.UserInfo.Picture
+				if len(user.Picture) == 0 {
+					user.Picture = "/icon/" + session.UserInfo.Email
+				}
+				models.UpdateUser(db, user)
+				userCache.SetUser(user)
 			}
 			if err != nil {
 				w.WriteHeader(http.StatusUnauthorized)
 			}
+
+			//Update User
+			go models.UpdateUser(db, user)
+			go userCache.SetUser(user)
 			ctx := context.WithValue(r.Context(), userCtx, user)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})

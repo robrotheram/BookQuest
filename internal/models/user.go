@@ -41,6 +41,10 @@ func CreateUser(db *bun.DB, user User) error {
 	return err
 }
 
+func UpdateUser(db *bun.DB, user User) error {
+	_, err := db.NewUpdate().Model(&user).WherePK().Exec(context.Background())
+	return err
+}
 func UserGetLinks(db *bun.DB, id uuid.UUID) ([]Link, error) {
 	user := User{}
 	err := db.NewSelect().

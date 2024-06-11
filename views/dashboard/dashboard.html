@@ -7,73 +7,77 @@
   <div class="flex min-h-screen w-full">
     {{template "sidebar"}}
     <div class="flex flex-1 flex-col">
-      {{template "topnav"}}
-      <main class="flex-1 overflow-y-auto px-6 flex flex-col divide-y bg-white">
-        <section class="py-6">
-          <h3 class="text-lg font-semibold mb-4">Link Stats</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-              <div class="flex flex-col space-y-1.5 p-6">
-                <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Total Links Shared</h3>
-              </div>
-              <div class="p-6">
-                <div class="text-4xl font-bold">{{.TotalLinksShared}}</div>
-              </div>
-            </div>
-            <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-              <div class="flex flex-col space-y-1.5 p-6">
-                <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
-                  Total Links Clicked
-                </h3>
-              </div>
-              <div class="p-6">
-                <div class="text-4xl font-bold">{{.TotalLinksClicked}}</div>
-              </div>
-            </div>
-            <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-              <div class="flex flex-col space-y-1.5 p-6">
-                <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
-                  Total Links Favorited
-                </h3>
-              </div>
-              <div class="p-6">
-                <div class="text-4xl font-bold">{{.TotalLinksFavorited}}</div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section class="py-6">
-          <h3 class="text-lg font-semibold mb-4">Most Clicked Links</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            
-            {{range .TopLinks}}
-            <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-              <div class="flex flex-col space-y-1.5 p-6">
-                <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">{{.Link.Title}}</h3>
-              </div>
-              <div class="p-6">
-                <p class="text-gray-500 dark:text-gray-400">{{.Link.Description}}</p>
-                <div class="text-4xl font-bold mt-4">{{.Clicked}}</div>
-              </div>
-            </div>
-            
-            {{end}}
-          </div>
-        </section>
-        <section class="py-6">
-          <h3 class="text-lg font-semibold mb-4">Teams</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {{range .Teams}}
-              {{template "team_card" .}}
-            {{end}}
-          </div>
-        </section>
-      </main>
+      {{template "topnav" .User}}
+      {{template "dashboard_content" .Data}}
     </div>
   </div>
 </body>
 
 </html>
+{{end}}
+
+{{define "dashboard_content"}}
+<main class="flex-1 overflow-y-auto px-6 flex flex-col divide-y bg-white">
+  <section class="py-6">
+    <h3 class="text-lg font-semibold mb-4">Link Stats</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+        <div class="flex flex-col space-y-1.5 p-6">
+          <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Total Links Shared</h3>
+        </div>
+        <div class="p-6">
+          <div class="text-4xl font-bold">{{.TotalLinksShared}}</div>
+        </div>
+      </div>
+      <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+        <div class="flex flex-col space-y-1.5 p-6">
+          <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
+            Total Links Clicked
+          </h3>
+        </div>
+        <div class="p-6">
+          <div class="text-4xl font-bold">{{.TotalLinksClicked}}</div>
+        </div>
+      </div>
+      <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+        <div class="flex flex-col space-y-1.5 p-6">
+          <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
+            Total Links Favorited
+          </h3>
+        </div>
+        <div class="p-6">
+          <div class="text-4xl font-bold">{{.TotalLinksFavorited}}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="py-6">
+    <h3 class="text-lg font-semibold mb-4">Most Clicked Links</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      
+      {{range .TopLinks}}
+      <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+        <div class="flex flex-col space-y-1.5 px-6 py-3">
+          <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">{{.Link.Title}}</h3>
+          <p class="text-sm text-gray-500 overflow-hidden">{{.Link.Url}}</p>
+        </div>
+        <div class="px-6 py-3">
+          <div class="text-4xl font-bold mt-4">{{.Clicked}}</div>
+        </div>
+      </div>
+      
+      {{end}}
+    </div>
+  </section>
+  <section class="py-6">
+    <h3 class="text-lg font-semibold mb-4">Teams</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {{range .Teams}}
+        {{template "team_card" .}}
+      {{end}}
+    </div>
+  </section>
+</main>
 {{end}}
 
 {{define "team_card"}}

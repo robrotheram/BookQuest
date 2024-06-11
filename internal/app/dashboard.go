@@ -3,7 +3,6 @@ package app
 import (
 	"BookQuest/internal/auth"
 	"BookQuest/internal/models"
-	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -35,7 +34,7 @@ func (app *App) HandleDashboard(w http.ResponseWriter, r *http.Request) {
 		meta = meta[:3]
 	}
 
-	app.Render(w, "dashboard", DashboadPage{
+	app.RenderPage(w, "dashboard", user, DashboadPage{
 		Teams:               teams,
 		TopLinks:            meta,
 		TotalLinksShared:    len(favs),
@@ -55,7 +54,7 @@ func (app *App) HandleLinkDashboard(w http.ResponseWriter, r *http.Request) {
 	page := LinkDashboardPage{
 		Links: links,
 	}
-	app.Render(w, "link_dashboard", page)
+	app.RenderPage(w, "link_dashboard", user, page)
 }
 
 func (app *App) HandleLinkFilter(w http.ResponseWriter, r *http.Request) {
@@ -66,7 +65,7 @@ func (app *App) HandleLinkFilter(w http.ResponseWriter, r *http.Request) {
 	page := LinkDashboardPage{
 		Links: models.FilterLinks(links, query),
 	}
-	app.Render(w, "link_table", page)
+	app.RenderComponent(w, "link_table", page)
 }
 
 func (app *App) HandleLinkDelete(w http.ResponseWriter, r *http.Request) {
@@ -80,5 +79,13 @@ func (app *App) HandleTeamDashboard(w http.ResponseWriter, r *http.Request) {
 
 	teams, err := models.GetTeamsByUser(app.db, user.Id)
 	slog.Warn("%v", err)
-	fmt.Println(app.Render(w, "teams_dashboard", teams))
+	app.RenderPage(w, "teams_dashboard", user, teams)
+}
+
+func (app *App) HandleTeamFilter(w http.ResponseWriter, r *http.Request) {
+	user, _ := auth.GetUser(r)
+	query := r.FormValue("search")
+	teams, err := models.GetTeamsByUser(app.db, user.Id)
+	slog.Warn("%v", err)
+	app.RenderComponent(w, "team_cards", models.FilterTeams(teams, query))
 }

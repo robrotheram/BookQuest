@@ -15,7 +15,7 @@ func (app *App) HandleFavourite(w http.ResponseWriter, r *http.Request) {
 
 	if models.FavouriteExists(app.db, linkId, user.Id) {
 		models.RemoveFavourite(app.db, linkId, user.Id)
-		app.Render(w, "fav_btn", SearchResult{
+		app.RenderComponent(w, "fav_btn", SearchResult{
 			Link: models.Link{
 				Id: uuid.MustParse(linkId),
 			},
@@ -23,7 +23,7 @@ func (app *App) HandleFavourite(w http.ResponseWriter, r *http.Request) {
 		})
 	} else {
 		models.AddFavourite(app.db, linkId, user.Id)
-		app.Render(w, "fav_btn", SearchResult{
+		app.RenderComponent(w, "fav_btn", SearchResult{
 			Link: models.Link{
 				Id: uuid.MustParse(linkId),
 			},
@@ -40,7 +40,7 @@ func (app *App) HandleFavouriteFilter(w http.ResponseWriter, r *http.Request) {
 	page := LinkDashboardPage{
 		Links: models.FilterLinks(links, query),
 	}
-	app.Render(w, "link_fav_table", page)
+	app.RenderComponent(w, "link_fav_table", page)
 }
 
 func (app *App) HandleFavouriteDelete(w http.ResponseWriter, r *http.Request) {
@@ -58,5 +58,5 @@ func (app *App) HandleFavDashboard(w http.ResponseWriter, r *http.Request) {
 	page := LinkDashboardPage{
 		Links: links,
 	}
-	app.Render(w, "fav_dashboard", page)
+	app.RenderPage(w, "fav_dashboard", user, page)
 }

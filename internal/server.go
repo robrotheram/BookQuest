@@ -3,14 +3,19 @@ package BookQuest
 import (
 	"BookQuest/internal/app"
 	"BookQuest/internal/auth"
+	"BookQuest/internal/icons"
 	"BookQuest/internal/migrations"
 	"BookQuest/internal/models"
 	"BookQuest/internal/render"
 	"context"
+	"crypto/md5"
 	"database/sql"
+	"fmt"
+	"image/color"
 	"io/fs"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -83,7 +88,6 @@ func NewServer(static, tmplateFS fs.FS) *chi.Mux {
 		r.Post("/link/{id}", app.HandleFavourite)
 
 		r.Get("/dashboard", app.HandleDashboard)
-
 		r.Get("/dashboard/favourites", app.HandleFavDashboard)
 		r.Post("/dashboard/favourites", app.HandleFavouriteFilter)
 		r.Delete("/dashboard/favourites/{id}", app.HandleFavouriteDelete)
@@ -93,13 +97,13 @@ func NewServer(static, tmplateFS fs.FS) *chi.Mux {
 
 		r.Get("/dashboard/link", app.HandleLinkCreateDashboard)
 		r.Post("/dashboard/link", app.HandleLinkCreation)
+		r.Post("/dashboard/link/icon", app.HandleGetIcon)
 		r.Get("/dashboard/link/{id}", app.HandleLinkEditDashboard)
 		r.Post("/dashboard/link/{id}", app.HandleLinkEdit)
 		r.Delete("/dashboard/link/{id}", app.HandleLinkDelete)
 
 		r.Get("/dashboard/teams", app.HandleTeamDashboard)
-
-		r.Post("/dashboard/teams", app.HandleTeamCreate)
+		r.Post("/dashboard/teams", app.HandleTeamFilter)
 		r.Get("/dashboard/team", app.HandleCreateTeamPage)
 		r.Put("/dashboard/team", app.HandleTeamCreate)
 		r.Get("/dashboard/team/{id}", app.HandleTeamPage)
@@ -109,8 +113,37 @@ func NewServer(static, tmplateFS fs.FS) *chi.Mux {
 		r.Post("/dashboard/team/{id}/members", app.HandleTeamMemberEdit)
 	})
 
+	r.Post("/add", app.HandleAdd)
 	// Public route
 	r.Handle("/static/*", http.StripPrefix("/static/", cacheControlFileServer))
+	r.Get("/icon/{name}", func(w http.ResponseWriter, r *http.Request) {
+
+		url := "https://outline.exceptionerror.io/doc/test-ATIROXzoXi"
+		icon, _ := icons.GetIcon(url)
+		fmt.Println(icon)
+
+		name := chi.URLParam(r, "name")
+		w.Header().Set("Content-Type", "image/svg+xml")
+		icons.RenderSVG(strings.ToUpper(shortText(name)), colorFromText(name), w)
+	})
 	r.Get("/auth/callback", authN.Callback)
 	return r
+}
+
+func shortText(text string) string {
+	split := strings.Split(text, " ")
+	if len(split) >= 2 {
+		return string([]rune(split[0])[0]) + string([]rune(split[1])[0])
+	}
+	return string([]rune(text)[0]) + string([]rune(text)[1])
+}
+
+func colorFromText(text string) color.RGBA {
+	hash := md5.Sum([]byte(text))
+	return color.RGBA{
+		R: hash[0],
+		G: hash[1],
+		B: hash[2],
+		A: 255,
+	}
 }

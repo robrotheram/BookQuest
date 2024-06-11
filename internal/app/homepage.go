@@ -16,7 +16,7 @@ func (app *App) HandleHomepage(w http.ResponseWriter, r *http.Request) {
 
 	top := models.GetTopLinks(app.db)
 	myLinks := models.GetUserTopLinks(app.db, user.Id)
-	app.Render(w, "index", HomePage{
+	app.RenderPage(w, "index", user, HomePage{
 		MyLinks:  ConvertLinkToSearchResult(myLinks),
 		TopLinks: ConvertLinkToSearchResult(top),
 	})

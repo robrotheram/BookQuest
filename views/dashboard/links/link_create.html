@@ -6,32 +6,38 @@
     <div class="flex min-h-screen w-full">
         {{template "sidebar"}}
         <div class="flex flex-1 flex-col">
-            {{template "topnav"}}
-            <main class="flex-1 overflow-y-auto px-6 py-8">
-                <div class="flex flex-col rounded-lg border bg-card text-card-foreground shadow-sm p-6 divide-y mb-4">
-                    <section class="space-y-4">
-                        <h1 class="text-3xl font-bold mb-4">New Link</h1>
-                        <div id="message"></div>
-                        <div class="indicator">Loading...</div>
-                        <form class="space-y-6"  hx-post="/dashboard/link" hx-target="#message" hx-indicator=".indicator">
-                            {{template "link_form" .}}
-                        </form>
-                        <script>
-                            document.addEventListener("htmx:afterOnLoad", function(evt) {
-                                var redirectUrl = evt.detail.xhr.getResponseHeader("HX-Redirect");
-                                if (redirectUrl) {
-                                    window.location.href = redirectUrl;
-                                }
-                            });
-                        </script>
-                    </section>
-                </div>
-            </main>
+            {{template "topnav" .User}}
+            {{template "link_create_content" .Data}}
+            
         </div>
     </div>
 </body>
 </html>
 {{end}}
+
+{{define "link_create_content"}}
+<main class="flex-1 overflow-y-auto px-6 py-8">
+    <div class="flex flex-col rounded-lg border bg-card text-card-foreground shadow-sm p-6 divide-y mb-4">
+        <section class="space-y-4">
+            <h1 class="text-3xl font-bold mb-4">New Link</h1>
+            <div id="message"></div>
+            <div class="indicator">Loading...</div>
+            <form class="space-y-6"  hx-post="/dashboard/link" hx-target="#message" hx-indicator=".indicator">
+                {{template "link_form" .}}
+            </form>
+            <script>
+                document.addEventListener("htmx:afterOnLoad", function(evt) {
+                    var redirectUrl = evt.detail.xhr.getResponseHeader("HX-Redirect");
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                    }
+                });
+            </script>
+        </section>
+    </div>
+</main>
+{{end}}
+
 
 {{define "link_edit_dashboard"}}
 <!DOCTYPE html>
@@ -41,21 +47,26 @@
     <div class="flex min-h-screen w-full">
         {{template "sidebar"}}
         <div class="flex flex-1 flex-col">
-            {{template "topnav"}}
-            <main class="flex-1 overflow-y-auto px-6 py-8">
-                <div class="flex flex-col rounded-lg border bg-card text-card-foreground shadow-sm p-6 divide-y mb-4">
-                    <section class="space-y-4">
-                        <h1 class="text-3xl font-bold mb-4">Edit Link</h1>
-                        <div id="message"></div>
-                        <form class="space-y-6" hx-post="/dashboard/link/{{.Link.Id}}" hx-target="#message">
-                            {{template "link_form" .}}
-                        </form>
-                        
-                    </section>
-                </div>
-            </main>
+            {{template "topnav" .User}}
+            {{template "link_edit_content" .Data}}
+            
         </div>
     </div>
 </body>
 </html>
+{{end}}
+
+{{define "link_edit_content"}}
+<main class="flex-1 overflow-y-auto px-6 py-8">
+    <div class="flex flex-col rounded-lg border bg-card text-card-foreground shadow-sm p-6 divide-y mb-4">
+        <section class="space-y-4">
+            <h1 class="text-3xl font-bold mb-4">Edit Link</h1>
+            <div id="message"></div>
+            <form class="space-y-6" hx-post="/dashboard/link/{{.Link.Id}}" hx-target="#message">
+                {{template "link_form" .}}
+            </form>
+            
+        </section>
+    </div>
+</main>
 {{end}}
