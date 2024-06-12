@@ -12,5 +12,5 @@ COPY --from=GO_BUILDER /server/BookQuest /app/BookQuest
 ADD static /app/static
 ADD views /app/views
 EXPOSE 8090
-ENTRYPOINT ["ls"]
-CMD ["-alh"]
+ENTRYPOINT ["./BookQuest"]
+CMD ["server"]
