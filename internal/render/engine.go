@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"io"
 	"io/fs"
-	"log"
 	"log/slog"
 	"os"
 	"sort"
@@ -18,11 +17,10 @@ import (
 )
 
 type Render struct {
-	// development bool
 	watcher    *fsnotify.Watcher
 	Templates  *template.Template
 	templateFS fs.FS
-	reload     *LiveRealod
+	Reload     *LiveRealod
 }
 
 func hashFile(path string) ([]byte, error) {
@@ -99,7 +97,7 @@ func (render *Render) watch() {
 			case event := <-render.watcher.Events:
 				slog.Info("Change: " + event.Name)
 				if hash, err := render.BuildTemplates(); err == nil {
-					render.reload.Broadcast(hash)
+					render.Reload.Broadcast(hash)
 				}
 			case err := <-render.watcher.Errors:
 				slog.Warn("ERROR", err)
@@ -112,18 +110,15 @@ func (render *Render) Render(w io.Writer, name string, data any) error {
 	return render.Templates.ExecuteTemplate(w, name, data)
 }
 
-func NewRender(mux *chi.Mux, templateFS fs.FS) *Render {
-	watcher, err := fsnotify.NewWatcher()
-	if err != nil {
-		log.Fatalf("Failed setting up watcher: %v", err)
-	}
+func NewRender(mux *chi.Mux, templateFS fs.FS, liveReload bool) *Render {
 	render := &Render{
-		watcher:    watcher,
 		templateFS: templateFS,
 	}
-	if hash, err := render.BuildTemplates(); err == nil {
-		render.reload = NewLiveReloadSever(hash)
-		mux.HandleFunc("/live-reload", render.reload.CreateLiveReloadHandler())
+	if hash, err := render.BuildTemplates(); err == nil && liveReload {
+		watcher, _ := fsnotify.NewWatcher()
+		render.watcher = watcher
+		render.Reload = NewLiveReloadSever(hash)
+		mux.HandleFunc("/live-reload", render.Reload.CreateLiveReloadHandler())
 		render.watch()
 	}
 	return render

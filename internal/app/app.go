@@ -25,13 +25,15 @@ func (app *App) RenderComponent(w io.Writer, name string, data any) error {
 }
 
 type PageData struct {
-	User models.User
-	Data any
+	User       models.User
+	Data       any
+	LiveReload bool
 }
 
 func (app *App) RenderPage(w io.Writer, name string, user models.User, data any) error {
 	return app.template.Render(w, name, PageData{
-		User: user,
-		Data: data,
+		User:       user,
+		Data:       data,
+		LiveReload: (app.template.Reload != nil),
 	})
 }

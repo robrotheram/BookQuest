@@ -51,7 +51,6 @@ func NewServer(static, tmplateFS fs.FS) *chi.Mux {
 	migrations.Create(db)
 	migrations.Migrate(db)
 
-	log.Println(Configuration)
 	authN, err := authentication.New(context.Background(), zitadel.New(Configuration.OIDCServer), Configuration.SecretKey,
 		openid.DefaultAuthentication(Configuration.ClientID, Configuration.RedirectURI, Configuration.SecretKey),
 	)
@@ -77,7 +76,7 @@ func NewServer(static, tmplateFS fs.FS) *chi.Mux {
 		AllowedHeaders:  []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 	}))
 
-	app := app.NewApp(db, render.NewRender(r, tmplateFS))
+	app := app.NewApp(db, render.NewRender(r, tmplateFS, Configuration.Development))
 
 	// Protected route
 	r.Group(func(r chi.Router) {
