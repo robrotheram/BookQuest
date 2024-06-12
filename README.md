@@ -128,6 +128,54 @@ bookquest db status
 bookquest db mark_applied
 ```   
 
+## Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+
+- You have installed Go 1.22. You can download it from [Go's official website](https://golang.org/dl/).
+- You have a working environment for Go development. If not, follow the setup instructions provided by Go's documentation.
+
+## Installation
+
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/robrotheram/BookQuest.git
+    cd BookQuest
+    ```
+
+2. Download the project dependencies:
+
+    ```bash
+    go mod tidy
+    ```
+
+## Building the Project
+
+To build the project, follow these steps:
+
+1. Navigate to the project directory (if not already there):
+
+    ```bash
+    cd BookQuest
+    ```
+
+2. Build the project:
+
+    ```bash
+    go build -o bookquest ./cmd/main.go
+    ```
+
+    This command will compile the Go code and create an executable named `bookquest` in the current directory.
+
+## Running the Project
+
+Once the project is built, you can run the executable:
+
+```bash
+./bookquest
+```
+
 ## Contributing
 We welcome contributions! Please see CONTRIBUTING.md for details.
 

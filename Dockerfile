@@ -2,7 +2,7 @@ FROM golang:1.22.0 as GO_BUILDER
 ARG VER
 WORKDIR /server
 ADD . .
-RUN CGO_ENABLED=0 GOOS=linux go build
+RUN CGO_ENABLED=0 GOOS=linux go build -o BookQuest ./cmd/main.go
 
 FROM alpine
 LABEL org.opencontainers.image.source="https://github.com/robrotheram/bookquest"
