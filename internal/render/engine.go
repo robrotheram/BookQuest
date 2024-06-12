@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"io"
 	"io/fs"
+	"log"
 	"log/slog"
 	"os"
 	"sort"
@@ -112,7 +113,10 @@ func (render *Render) Render(w io.Writer, name string, data any) error {
 }
 
 func NewRender(mux *chi.Mux, templateFS fs.FS) *Render {
-	watcher, _ := fsnotify.NewWatcher()
+	watcher, err := fsnotify.NewWatcher()
+	if err != nil {
+		log.Fatalf("Failed setting up watcher: %v", err)
+	}
 	render := &Render{
 		watcher:    watcher,
 		templateFS: templateFS,

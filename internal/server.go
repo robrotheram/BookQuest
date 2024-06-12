@@ -11,6 +11,7 @@ import (
 	"database/sql"
 	"fmt"
 	"io/fs"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -50,9 +51,13 @@ func NewServer(static, tmplateFS fs.FS) *chi.Mux {
 	migrations.Create(db)
 	migrations.Migrate(db)
 
-	authN, _ := authentication.New(context.Background(), zitadel.New(Configuration.OIDCServer), Configuration.SecretKey,
+	log.Println(Configuration)
+	authN, err := authentication.New(context.Background(), zitadel.New(Configuration.OIDCServer), Configuration.SecretKey,
 		openid.DefaultAuthentication(Configuration.ClientID, Configuration.RedirectURI, Configuration.SecretKey),
 	)
+	if err != nil {
+		log.Fatalf("Failed setting up Authentication: %v", err)
+	}
 	mw := auth.AuthMiddleware(db, authN)
 
 	fSys, _ := fs.Sub(static, "static")
