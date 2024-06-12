@@ -8,14 +8,11 @@ import (
 	"BookQuest/internal/models"
 	"BookQuest/internal/render"
 	"context"
-	"crypto/md5"
 	"database/sql"
 	"fmt"
-	"image/color"
 	"io/fs"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -112,38 +109,13 @@ func NewServer(static, tmplateFS fs.FS) *chi.Mux {
 		r.Delete("/dashboard/team/{id}/members", app.HandleTeamMemberRemove)
 		r.Post("/dashboard/team/{id}/members", app.HandleTeamMemberEdit)
 	})
-
-	r.Post("/add", app.HandleAdd)
 	// Public route
 	r.Handle("/static/*", http.StripPrefix("/static/", cacheControlFileServer))
-	r.Get("/icon/{name}", func(w http.ResponseWriter, r *http.Request) {
-
-		url := "https://outline.exceptionerror.io/doc/test-ATIROXzoXi"
-		icon, _ := icons.GetIcon(url)
-		fmt.Println(icon)
-
-		name := chi.URLParam(r, "name")
-		w.Header().Set("Content-Type", "image/svg+xml")
-		icons.RenderSVG(strings.ToUpper(shortText(name)), colorFromText(name), w)
-	})
+	r.Get("/icon/{name}", icons.HandleIcon)
 	r.Get("/auth/callback", authN.Callback)
+	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintln(w, "ok")
+	})
 	return r
-}
-
-func shortText(text string) string {
-	split := strings.Split(text, " ")
-	if len(split) >= 2 {
-		return string([]rune(split[0])[0]) + string([]rune(split[1])[0])
-	}
-	return string([]rune(text)[0]) + string([]rune(text)[1])
-}
-
-func colorFromText(text string) color.RGBA {
-	hash := md5.Sum([]byte(text))
-	return color.RGBA{
-		R: hash[0],
-		G: hash[1],
-		B: hash[2],
-		A: 255,
-	}
 }
