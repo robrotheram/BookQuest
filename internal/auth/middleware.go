@@ -37,7 +37,7 @@ func AuthMiddleware(db *bun.DB, authN *authentication.Authenticator[*openid.User
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			session, err := authN.IsAuthenticated(r)
 			if err != nil {
-				authN.Authenticate(w, r, r.URL.Path)
+				authN.Authenticate(w, r, r.URL.String())
 				return
 			}
 			user, err := userCache.GetUser(session.UserInfo.Email)

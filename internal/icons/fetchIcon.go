@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"sort"
 	"strings"
 
@@ -14,6 +15,17 @@ type icon struct {
 	Href string
 	Rel  string
 	Size string
+}
+
+func parseURL(uri string) string {
+	u, err := url.Parse(uri)
+	if err != nil {
+		return uri
+	}
+	u.Path = ""
+	u.RawQuery = ""
+	u.Fragment = ""
+	return u.String()
 }
 
 func GetIcon(url string) (string, error) {
@@ -29,7 +41,11 @@ func GetIcon(url string) (string, error) {
 	if bestIcon == nil {
 		return "", err
 	}
-	return bestIcon.Href, nil
+
+	if strings.HasPrefix(bestIcon.Href, "https://") || strings.HasPrefix(bestIcon.Href, "http://") {
+		return bestIcon.Href, nil
+	}
+	return (parseURL(url) + bestIcon.Href), nil
 }
 
 func fetchHTML(url string) (io.Reader, error) {

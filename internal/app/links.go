@@ -4,6 +4,7 @@ import (
 	"BookQuest/internal/auth"
 	"BookQuest/internal/icons"
 	"BookQuest/internal/models"
+	"encoding/base64"
 	"fmt"
 	"net/http"
 	"time"
@@ -32,6 +33,10 @@ type LinkEditData struct {
 func (app *App) HandleLinkCreateDashboard(w http.ResponseWriter, r *http.Request) {
 	user, _ := auth.GetUser(r)
 	teams, _ := models.GetTeamsByUser(app.db, user.Id)
+
+	data, _ := base64.StdEncoding.DecodeString(r.URL.Query().Get("data"))
+	process(string(data))
+
 	link := models.Link{
 		Title:       r.URL.Query().Get("title"),
 		Icon:        r.URL.Query().Get("icon"),

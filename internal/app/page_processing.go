@@ -1,4 +1,4 @@
-package BookQuest
+package app
 
 import (
 	"BookQuest/internal/stopwords"
