@@ -7,6 +7,7 @@
         </div>
         <p class="text-sm text-gray-500 overflow-hidden">{{.Url}}</p>
     </a>
+    <div data-orientation="horizontal" role="none" class="shrink-0 bg-gray-100 h-[1px] w-full"></div>
 {{end}}
 
 {{define "search_card_footer"}}
@@ -49,9 +50,10 @@
 <div class="rounded-lg shadow-sm bg-white text-gray-950 hover:shadow-lg transition-shadow flex flex-col justify-between  "
     data-v0-t="card">
     {{template "search_card_header" .}}
-    <pre
-        class="px-6 pt-3 text-sm text-gray-500 w-full overflow-auto whitespace-pre-wrap max-h-36">{{.Description}}</pre>
-        {{template "search_card_footer" .}}
+    {{if .Description}}
+        <pre class="px-6 py-3 text-sm text-gray-500 w-full overflow-auto whitespace-pre-wrap max-h-36">{{.Description}}</pre>
+    {{end}}
+    {{template "search_card_footer" .}}
 </div>
 {{end}}
 

@@ -29,7 +29,7 @@ func (app *App) HandleSearch(w http.ResponseWriter, r *http.Request) {
 		query = search
 	}
 
-	links, _ := QueryLinks(app.db, query, user.Id)
+	links, _ := QueryLinks(app.db, query, user.Id.String())
 
 	// results, _ = server.Search(query)
 	// for i, result := range results {

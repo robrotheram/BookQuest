@@ -31,10 +31,15 @@ type LinkEditData struct {
 
 func (app *App) HandleLinkCreateDashboard(w http.ResponseWriter, r *http.Request) {
 	user, _ := auth.GetUser(r)
-
 	teams, _ := models.GetTeamsByUser(app.db, user.Id)
+	link := models.Link{
+		Title:       r.URL.Query().Get("title"),
+		Icon:        r.URL.Query().Get("icon"),
+		Description: r.URL.Query().Get("description"),
+		Url:         r.URL.Query().Get("url"),
+	}
 	app.RenderPage(w, "link_create_dashboard", user, LinkEditData{
-		Link:  models.Link{},
+		Link:  link,
 		Teams: teams,
 		Shareing: []models.ShareSettings{
 			models.PUBLIC,

@@ -83,7 +83,7 @@ func NewServer(static, tmplateFS fs.FS) *chi.Mux {
 		r.Use(mw)
 		r.Get("/", app.HandleHomepage)
 		r.Get("/search", app.HandleSearch)
-
+		
 		r.Get("/link/{id}", app.HandleLinkedUsed)
 		r.Post("/link/{id}/fav", app.HandleFavourite)
 		r.Post("/link/{id}", app.HandleFavourite)

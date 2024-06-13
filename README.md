@@ -13,7 +13,7 @@ This is a Go project that leverages HTMX for dynamic frontend interactions and P
 
 ## Prerequisites
 Make sure you have the following installed on your system:
-- [Go](https://golang.org/doc/install) 1.16+
+- [Go](https://golang.org/doc/install) 1.22+
 - [PostgreSQL](https://www.postgresql.org/download/)
 
 ## Installation
@@ -37,6 +37,39 @@ To stop the running application and PostgreSQL services, use the following comma
 ```sh
 docker compose down
 ```
+
+### Bookmarklet
+
+This bookmarklet allows you to quickly save the current page to our web service. Follow the instructions below to add and use the bookmarklet.
+
+**How It Works**
+When you click the bookmarklet, it sends the URL of the current page to our web service, which then saves it for you.
+
+**Adding the Bookmarklet**
+
+1. Show the Bookmarks Bar:
+
+    - In Chrome: Ctrl+Shift+B (Windows/Linux) or Cmd+Shift+B (Mac)
+    - In Firefox: Ctrl+B (Windows/Linux) or Cmd+B (Mac)
+
+2. Create a New Bookmark:
+
+    - Right-click on the bookmarks bar and select Add page... (Chrome) or New Bookmark... (Firefox).
+    - Set the name to something like Save Page.
+
+3. Set the URL to the following JavaScript code:
+```javascript
+javascript:(function(){function getFavicon(){const linkElements=document.querySelectorAll('link[rel~="icon"]');return linkElements.length?linkElements[0].href:""}function getDescription(){const metaDescription=document.querySelector(%27meta[name="description"]%27);return metaDescription?metaDescription.content:""}const title=encodeURIComponent(document.title);const favicon=encodeURIComponent(getFavicon());const description=encodeURIComponent(getDescription());const pageUrl=encodeURIComponent(window.location.href);const externalSiteUrl="http://localhost:8090/dashboard/link";const url=`${externalSiteUrl}?title=${title}&icon=${favicon}&description=${description}&url=${pageUrl}`;window.open(url,%27_blank%27)})();
+```
+4. Save the Bookmark:
+
+    - Click Save or Add to create the bookmarklet.
+
+**Using the Bookmarklet**
+
+1. Navigate to the page you want to save.
+2. Click on the Save Page bookmarklet in your bookmarks bar.
+3. A message will appear confirming that the page has been saved.
 
 
 ## Configuration
