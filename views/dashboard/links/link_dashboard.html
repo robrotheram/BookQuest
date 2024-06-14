@@ -43,7 +43,7 @@
 {{define "link_table"}}
 {{range .Links}}
 <tr id="link-{{.Id}}" class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 flex items-center gap-2">
+    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 flex items-center gap-2 w-96">
         <img src="{{.Icon}}" alt="Blog Logo" width="24" height="24" class="h-6 w-6"
         style="aspect-ratio: 24 / 24; object-fit: cover;" />
         <div class="font-medium">{{.Title}}</div>

@@ -50,7 +50,7 @@ func GetTopLinks(db *bun.DB) []Link {
 			return q.Where("sharing = ?", PUBLIC)
 		}).
 		OrderExpr("clicked").
-		Limit(5).
+		Limit(4).
 		Scan(context.Background()); err != nil {
 		panic(err)
 	}
@@ -75,7 +75,7 @@ func GetUserLinksMeta(db *bun.DB, userId uuid.UUID, limit int) ([]LinkMeta, erro
 }
 
 func GetUserTopLinks(db *bun.DB, userId uuid.UUID) []Link {
-	meta, err := GetUserLinksMeta(db, userId, 5)
+	meta, err := GetUserLinksMeta(db, userId, 4)
 	links := []Link{}
 	if err != nil {
 		return links

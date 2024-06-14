@@ -3,9 +3,9 @@
         <div class="flex items-center gap-2">
             <img src="{{.Link.Icon}}" alt="Blog Logo" width="24" height="24" class="h-6 w-6"
                 style="aspect-ratio: 24 / 24; object-fit: cover;" />
-            <h3 class="text-lg font-medium">{{.Title}}</h3>
+            <h3 class="text-lg font-medium text-nowrap overflow-hidden">{{.Title}}</h3>
         </div>
-        <p class="text-sm text-gray-500 overflow-hidden">{{.Url}}</p>
+        <p class="text-sm text-gray-500 text-nowrap overflow-hidden">{{.Url}}</p>
     </a>
     <div data-orientation="horizontal" role="none" class="shrink-0 bg-gray-100 h-[1px] w-full"></div>
 {{end}}
@@ -58,7 +58,7 @@
 {{end}}
 
 {{define "search_card_small"}}
-<div class="rounded-lg shadow-sm bg-white text-gray-950 hover:shadow-lg transition-shadow flex flex-col justify-between  "
+<div class="rounded-lg shadow-sm h-max bg-white text-gray-950 hover:shadow-lg transition-shadow flex flex-col justify-between  "
     data-v0-t="card">
     {{template "search_card_header" .}}
     {{template "search_card_footer" .}}
