@@ -2,12 +2,11 @@ package app
 
 import (
 	"BookQuest/internal/stopwords"
-	"fmt"
+	"net/url"
 	"sort"
+	"strconv"
 	"strings"
 	"unicode"
-
-	"github.com/kljensen/snowball/english"
 )
 
 // TFIDF represents a term frequency-inverse document frequency score for a term
@@ -16,8 +15,8 @@ type TFIDF struct {
 	Score float64
 }
 
-func process(paragraph string) {
-
+func Process(paragraph string) []string {
+	paragraph, _ = url.QueryUnescape(paragraph)
 	// Tokenize the paragraph
 	tokens := tokenize(paragraph)
 
@@ -29,16 +28,18 @@ func process(paragraph string) {
 
 	// Sort terms by TF-IDF score
 	sortedTerms := sortByScore(tfidfScores)
+	terms := []string{}
 
 	// Print top significant terms
-	topTerms := 50
-	fmt.Printf("Top %d significant terms:\n", topTerms)
+	topTerms := 5
+	// fmt.Printf("Top %d significant terms:\n", topTerms)
 	for i, term := range sortedTerms {
 		if i >= topTerms {
 			break
 		}
-		fmt.Printf("%s: %f\n", term.Term, term.Score)
+		terms = append(terms, term.Term)
 	}
+	return terms
 }
 
 // Tokenize breaks a string into tokens based on whitespace and punctuation
@@ -53,10 +54,16 @@ func preprocess(tokens []string) []string {
 	var result []string
 	for _, token := range tokens {
 		// Check if the token is a stopword
-		if _, ok := stopwords.StopWordsMap[token]; !ok {
+
+		if _, ok := stopwords.StopWordsMap[strings.ToLower(token)]; !ok {
+			//remove numbers
+			if _, err := strconv.Atoi(token); err != nil {
+				//not a number
+				result = append(result, token)
+			}
 			// Stem the token
-			stemmedToken := english.Stem(token, true)
-			result = append(result, stemmedToken)
+			// stemmedToken := english.Stem(token, true)
+
 		}
 	}
 	return result
@@ -69,7 +76,7 @@ func calculateTFIDF(tokens []string) map[string]float64 {
 	for _, token := range tokens {
 		tfidfScores[token]++
 	}
-	// Normalize TF-IDF scores
+	//Normalize TF-IDF scores
 	totalTokens := float64(len(tokens))
 	for term, count := range tfidfScores {
 		tfidfScores[term] = count / totalTokens

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -36,13 +37,14 @@ func (app *App) HandleLinkCreateDashboard(w http.ResponseWriter, r *http.Request
 	teams, _ := models.GetTeamsByUser(app.db, user.Id)
 
 	data, _ := base64.StdEncoding.DecodeString(r.URL.Query().Get("data"))
-	process(string(data))
+	tags := Process(string(data))
 
 	link := models.Link{
 		Title:       r.URL.Query().Get("title"),
 		Icon:        r.URL.Query().Get("icon"),
 		Description: r.URL.Query().Get("description"),
 		Url:         r.URL.Query().Get("url"),
+		Tags:        strings.Join(tags, ", "),
 	}
 	app.RenderPage(w, "link_create_dashboard", user, LinkEditData{
 		Link:  link,

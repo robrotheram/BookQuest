@@ -63,7 +63,6 @@ require (
 
 require (
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/kljensen/snowball v0.9.0
 	github.com/spf13/viper v1.18.2
 	github.com/zitadel/zitadel-go/v3 v3.0.0-next.2
 	golang.org/x/sys v0.18.0 // indirect

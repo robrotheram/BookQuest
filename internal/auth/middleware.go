@@ -37,6 +37,9 @@ func AuthMiddleware(db *bun.DB, authN *authentication.Authenticator[*openid.User
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			session, err := authN.IsAuthenticated(r)
 			if err != nil {
+				q := r.URL.Query()
+				q.Del("data")
+				r.URL.RawQuery = q.Encode()
 				authN.Authenticate(w, r, r.URL.String())
 				return
 			}

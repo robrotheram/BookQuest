@@ -59,7 +59,50 @@ When you click the bookmarklet, it sends the URL of the current page to our web 
 
 3. Set the URL to the following JavaScript code:
 ```javascript
-javascript:(function(){function getFavicon(){const linkElements=document.querySelectorAll('link[rel~="icon"]');return linkElements.length?linkElements[0].href:""}function getDescription(){const metaDescription=document.querySelector(%27meta[name="description"]%27);return metaDescription?metaDescription.content:""}const title=encodeURIComponent(document.title);const favicon=encodeURIComponent(getFavicon());const description=encodeURIComponent(getDescription());const pageUrl=encodeURIComponent(window.location.href);const externalSiteUrl="http://localhost:8090/dashboard/link";const url=`${externalSiteUrl}?title=${title}&icon=${favicon}&description=${description}&url=${pageUrl}`;window.open(url,%27_blank%27)})();
+javascript: (function() {
+    function getFavicon() {
+        const linkElements = document.querySelectorAll('link[rel~="icon"]');
+        return linkElements.length ? linkElements[0].href : ""
+    }
+
+    function getDescription() {
+        const metaDescription = document.querySelector('meta[name = "description"]');
+        return metaDescription ? metaDescription.content : ""
+    }
+
+    function getTextWithoutLinks(element) {
+        let text ='';
+        for (let child of element.childNodes) {
+            if (child.nodeType === Node.TEXT_NODE) {
+                continue;
+            } else if (child.nodeType === Node.ELEMENT_NODE && child.tagName.toLowerCase() !=='a'&& child.tagName.toLowerCase() !=='script') {
+                if (['div','p','br','hr','section','article'].includes(child.tagName.toLowerCase())) {
+                    const childText = getTextWithoutLinks(child).trim();
+                    if (childText) {
+                        text += childText +" ";
+                    }
+                } else {
+                    text += getTextWithoutLinks(child);
+                }
+            }
+        }
+        if (element.childNodes.length > 0 && element.nodeType === Node.ELEMENT_NODE) {
+            for (let child of element.childNodes) {
+                if (child.nodeType === Node.TEXT_NODE) {
+                    text += child.textContent;
+                }
+            }
+        }
+        return text;
+    }
+    const title = encodeURIComponent(document.title);
+    const favicon = encodeURIComponent(getFavicon());
+    const description = encodeURIComponent(getDescription());
+    const pageUrl = encodeURIComponent(window.location.href);
+    const data = btoa(encodeURIComponent(getTextWithoutLinks(document.body).trim()));
+    const url = `http://localhost:8090/dashboard/link?title=${title}&icon=${favicon}&description=${description}&url=${pageUrl}&data=${data}`;
+    window.open(url, "_blank")
+})();
 ```
 4. Save the Bookmark:
 
