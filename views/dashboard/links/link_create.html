@@ -16,12 +16,12 @@
 {{end}}
 
 {{define "link_create_content"}}
-<main class="flex-1 overflow-y-auto px-6 py-8">
+<main class="flex-1 overflow-y-auto px-6 py-8"  hx-ext="response-targets">
     <div class="flex flex-col rounded-lg border bg-card text-card-foreground shadow-sm p-6 divide-y mb-4">
         <section class="space-y-4">
             <h1 class="text-3xl font-bold mb-4">New Link</h1>
             <div id="message"></div>
-            <form class="space-y-6"  hx-post="/dashboard/link" hx-target="#message">
+            <form class="space-y-6"  hx-post="/dashboard/link" hx-target-*="#message">
                 {{template "link_form" .}}
             </form>
             <script>
@@ -56,12 +56,12 @@
 {{end}}
 
 {{define "link_edit_content"}}
-<main class="flex-1 overflow-y-auto px-6 py-8">
+<main class="flex-1 overflow-y-auto px-6 py-8" hx-ext="response-targets">
     <div class="flex flex-col rounded-lg border bg-card text-card-foreground shadow-sm p-6 divide-y mb-4">
         <section class="space-y-4">
             <h1 class="text-3xl font-bold mb-4">Edit Link</h1>
             <div id="message"></div>
-            <form class="space-y-6" hx-post="/dashboard/link/{{.Link.Id}}" hx-target="#message">
+            <form class="space-y-6" hx-post="/dashboard/link/{{.Link.Id}}" hx-target-*="#message" hx-swap="beforeend">
                 {{template "link_form" .}}
             </form>
             

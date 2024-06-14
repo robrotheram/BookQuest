@@ -6,6 +6,7 @@ import (
 	"BookQuest/internal/models"
 	"encoding/base64"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -116,20 +117,24 @@ func (app *App) HandleLinkCreation(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.ParseForm() != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		slog.Warn("unable to  form data for user: %s", "user", user.Username)
 		return
 	}
 	if decoder.Decode(&create, r.PostForm) != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		slog.Warn("unable to decode form data", "user", user.Username)
 		return
 	}
 
-	if models.CreateLink(app.db, *create.Link, user.Id) != nil {
+	if err := models.CreateLink(app.db, *create.Link, user.Id); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		slog.Warn(err.Error(), "user", user.Username)
 		return
 	}
 	if create.Sharing == models.TEAM {
 		for _, team := range create.Teams {
-			if models.AddLinkToTeam(app.db, create.Link.Id.String(), team) != nil {
+			if err := models.AddLinkToTeam(app.db, create.Link.Id.String(), team); err != nil {
+				slog.Warn(err.Error(), "user", user.Username)
 				w.WriteHeader(http.StatusBadRequest)
 				return
 			}
@@ -141,6 +146,7 @@ func (app *App) HandleLinkCreation(w http.ResponseWriter, r *http.Request) {
 
 func (app *App) HandleLinkEdit(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
+	user, _ := auth.GetUser(r)
 	link, err := models.GetLink(app.db, id)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -154,10 +160,12 @@ func (app *App) HandleLinkEdit(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.ParseForm() != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		slog.Warn("unable to decode form data", "user", user.Username)
 		return
 	}
 	if decoder.Decode(&create, r.PostForm) != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		slog.Warn("unable to decode form data", "user", user.Username)
 		return
 	}
 
@@ -166,6 +174,7 @@ func (app *App) HandleLinkEdit(w http.ResponseWriter, r *http.Request) {
 		teams, err := models.GetTeamsByLink(app.db, link.Id.String())
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
+			slog.Warn("unable to remove links", "user", user.Username)
 			return
 		}
 		for _, team := range teams {
@@ -177,16 +186,18 @@ func (app *App) HandleLinkEdit(w http.ResponseWriter, r *http.Request) {
 	link.Update(*create.Link)
 	if create.Sharing == models.TEAM {
 		for _, team := range create.Teams {
-			if models.AddLinkToTeam(app.db, link.Id.String(), team) != nil {
+			if err := models.AddLinkToTeam(app.db, link.Id.String(), team); err != nil {
 				w.WriteHeader(http.StatusBadRequest)
+				slog.Warn(err.Error(), "user", user.Username)
 				app.RenderComponent(w, "edit_error_alert", nil)
 				return
 			}
 		}
 	}
 
-	if models.UpdateLink(app.db, link) != nil {
+	if err := models.UpdateLink(app.db, link); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		slog.Warn(err.Error(), "user", user.Username)
 		app.RenderComponent(w, "edit_error_alert", nil)
 		return
 	}
