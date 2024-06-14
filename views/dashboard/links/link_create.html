@@ -21,7 +21,7 @@
         <section class="space-y-4">
             <h1 class="text-3xl font-bold mb-4">New Link</h1>
             <div id="message"></div>
-            <form class="space-y-6"  hx-post="/dashboard/link" hx-target-*="#message">
+            <form class="space-y-6"  hx-post="/dashboard/link" hx-target-*="#message" hx-swap="innerHTML">
                 {{template "link_form" .}}
             </form>
             <script>
@@ -61,10 +61,9 @@
         <section class="space-y-4">
             <h1 class="text-3xl font-bold mb-4">Edit Link</h1>
             <div id="message"></div>
-            <form class="space-y-6" hx-post="/dashboard/link/{{.Link.Id}}" hx-target-*="#message" hx-swap="beforeend">
+            <form class="space-y-6" hx-post="/dashboard/link/{{.Link.Id}}" hx-target="#message" hx-target-4*="#message" hx-swap="innerHTML">
                 {{template "link_form" .}}
             </form>
-            
         </section>
     </div>
 </main>

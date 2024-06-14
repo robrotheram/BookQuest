@@ -94,7 +94,7 @@ func AddLinkToTeam(db *bun.DB, linkId, teamId string) error {
 func RemoveLinksToTeam(db *bun.DB, linkId, teamId string) error {
 	_, err := db.NewDelete().
 		Model((*TeamLink)(nil)).
-		Where("link_id = ? AND team_id = >", linkId, teamId).
+		Where("link_id = ? AND team_id = ?", linkId, teamId).
 		Exec(context.Background())
 	return err
 }

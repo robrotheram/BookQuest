@@ -180,7 +180,10 @@ func (app *App) HandleLinkEdit(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		for _, team := range teams {
-			models.RemoveLinksToTeam(app.db, link.Id.String(), team.Id.String())
+			err := models.RemoveLinksToTeam(app.db, link.Id.String(), team.Id.String())
+			if err != nil {
+				slog.Warn(err.Error(), "user", user.Username)
+			}
 		}
 	}
 
