@@ -2,16 +2,15 @@
 <!DOCTYPE html>
 <html lang="en">
 {{template "head" .}}
-<body>
-    <div class="flex min-h-screen w-full">
-        {{template "sidebar"}}
-        <div class="flex flex-1 flex-col">
-            {{template "topnav" .User}}
-            <main class="flex-1 overflow-y-auto px-6 py-8">
-              {{template "team_edit" .Data}}
-            </main>
-        </div>
+
+<body hx-ext="preload">
+  <div class="h-screen flex flex-col">
+    {{template "topnav" .User}}
+    <div class="flex flex-grow overflow-hidden flex-col lg:flex-row">
+      {{template "sidebar"}}
+      {{template "team_edit" .Data}}
     </div>
+  </div>
 </body>
 </html>
 {{end}}
@@ -20,14 +19,15 @@
 <!DOCTYPE html>
 <html lang="en">
 {{template "head" .}}
-<body>
-    <div class="flex min-h-screen w-full">
-        {{template "sidebar"}}
-        <div class="flex flex-1 flex-col">
-            {{template "topnav" .User}}
-            {{template "teams_dashboard_content" .Data}}     
-        </div>
+
+<body hx-ext="preload">
+  <div class="h-screen flex flex-col">
+    {{template "topnav" .User}}
+    <div class="flex flex-grow overflow-hidden flex-col lg:flex-row">
+      {{template "sidebar"}}
+      {{template "teams_dashboard_content" .Data}}
     </div>
+  </div>
 </body>
 </html>
 {{end}}
@@ -36,8 +36,8 @@
 <main class="flex-1 overflow-y-auto px-6 flex flex-col divide-y">
     <section class="py-6">
         <div class="mb-4">
-            <div class="flex items-center justify-between">
-                <h2 class="text-xl font-semibold">Teams</h2>
+            <div class="flex items-center justify-between flex-col lg:flex-row space-y-4">
+                <h2 class="text-2xl font-semibold">Teams</h2>
                 <div class="flex items-center gap-4">
                     <input
                         class="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-72"

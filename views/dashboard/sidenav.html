@@ -1,46 +1,63 @@
 {{define "topnav"}}
-<header class="flex items-center justify-between border-b px-6 py-4 dark:border-zinc-800 dark:bg-zinc-900">
+<header class="flex items-center justify-between border-b px-6 py-4 border-zinc-950 bg-zinc-900">
+    <span class="block lg:hidden">
+        <button id="menu" class="text-white hover:bg-zinc-800 p-3 rounded-md" onclick="toggleNav()">
+            {{template "menu_icon"}}
+        </button>
+        <script>
+            function toggleNav() {
+                var element = document.getElementById("sidebar");
+                element.classList.toggle("hidden");
+            }
+            document.addEventListener("click", function (e) {
+                for (var element = e.target; element; element = element.parentNode) {
+                    if (element.id === 'sidebar' || element.id === "menu") { return }
+                }
+                var element = document.getElementById("sidebar");
+                element.classList.add("hidden");
+            });
+        </script>
+    </span>
+    <a href="/" class="space-x-3 hidden lg:flex">
+        <img src="/static/img/logo.png" class="h-10" alt="BookMarker Logo" />
+        <span class="self-center text-white text-2xl font-semibold whitespace-nowrap">BookMarker</span>
+    </a>
     <a href="/dashboard">
         <h1 class="text-white text-2xl font-semibold ">Dashboard</h1>
     </a>
-    <div class="flex items-center gap-4">
-        <img src="{{.Picture}}" width="42rem" height="42rem"/>
+    <div class="flex items-center gap-4 justify-end">
+        <img src="{{.Picture}}" width="42rem" height="42rem" />
     </div>
 </header>
 {{end}}
 
-{{define "sidebar"}}
-<div class="hidden w-64 shrink-0 border-r bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 lg:block">
-    <div class="flex h-full flex-col justify-between">
-        <a href="/" class="flex items-center justify-center space-x-3  py-4">
-            <img src="/static/img/logo.png" class="h-10" alt="BookMarker Logo" />
-            <span class="self-center text-white text-2xl font-semibold whitespace-nowrap">BookMarker</span>
-        </a>
-        <nav class="space-y-2 px-4 grow">
-            <a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                href="/dashboard/links">
-                {{template "link_icon"}}
-                My Links
-            </a>
-            <a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                href="/dashboard/favourites">
-                {{template "star_icon"}}
-                Favorites
-            </a>
-            <a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                href="/dashboard/teams">
-                {{template "team_icon"}}
-                Teams
-            </a>
-        </nav>
 
-        <nav class="space-y-2 p-4 ">
+{{define "sidebar"}}
+<nav id="sidebar"
+    class="hidden absolute z-20 lg:relative lg:w-64 w-full border-zinc-800 bg-zinc-900 text-white p-4 lg:flex flex-col space-y-4 justify-between">
+    <ul class="space-y-2 w-full">
+        <a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+            href="/dashboard/links">
+            {{template "link_icon"}}
+            My Links
+        </a>
+        <a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+            href="/dashboard/favourites">
+            {{template "star_icon"}}
+            Favorites
+        </a>
+        <a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+            href="/dashboard/teams">
+            {{template "team_icon"}}
+            Teams
+        </a>
+    </ul>
+    <ul>
         <a class="flex items-center gap-2 rounded-md px-3 bg-blue-800 py-2 text-md font-medium text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                href="/dashboard/link">
-                {{template "add_icon"}}
-                New Link
-            </a>
-        </nav>
-    </div>
-</div>
+            href="/dashboard/link">
+            {{template "add_icon"}}
+            New Link
+        </a>
+    </ul>
+</nav>
 {{end}}

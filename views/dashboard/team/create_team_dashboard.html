@@ -2,12 +2,13 @@
 <!DOCTYPE html>
 <html lang="en">
 {{template "head" .}}
-<body>
-  <div class="flex min-h-screen w-full">
-    {{template "sidebar"}}
-    <div class="flex flex-1 flex-col">
-      {{template "topnav" .User}}
-      {{template "create_team_content" .Data}}      
+
+<body hx-ext="preload">
+  <div class="h-screen flex flex-col">
+    {{template "topnav" .User}}
+    <div class="flex flex-grow overflow-hidden flex-col lg:flex-row">
+      {{template "sidebar"}}
+      {{template "create_team_content" .Data}}
     </div>
   </div>
 </body>

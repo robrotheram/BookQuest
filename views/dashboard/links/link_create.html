@@ -2,15 +2,14 @@
 <!DOCTYPE html>
 <html lang="en">
 {{template "head" .}}
-<body>
-    <div class="flex min-h-screen w-full">
-        {{template "sidebar"}}
-        <div class="flex flex-1 flex-col">
-            {{template "topnav" .User}}
-            {{template "link_create_content" .Data}}
-            
-        </div>
+<body hx-ext="preload">
+  <div class="h-screen flex flex-col">
+    {{template "topnav" .User}}
+    <div class="flex flex-grow overflow-hidden flex-col lg:flex-row">
+      {{template "sidebar"}}
+      {{template "link_create_content" .Data}}
     </div>
+  </div>
 </body>
 </html>
 {{end}}
@@ -42,15 +41,14 @@
 <!DOCTYPE html>
 <html lang="en">
 {{template "head" .}}
-<body>
-    <div class="flex min-h-screen w-full">
-        {{template "sidebar"}}
-        <div class="flex flex-1 flex-col">
-            {{template "topnav" .User}}
-            {{template "link_edit_content" .Data}}
-            
-        </div>
+<body hx-ext="preload">
+  <div class="h-screen flex flex-col">
+    {{template "topnav" .User}}
+    <div class="flex flex-grow overflow-hidden flex-col lg:flex-row">
+      {{template "sidebar"}}
+      {{template "link_edit_content" .Data}}
     </div>
+  </div>
 </body>
 </html>
 {{end}}
