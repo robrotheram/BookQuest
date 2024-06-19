@@ -69,6 +69,7 @@ type Team struct {
 	Id          uuid.UUID `bun:"type:uuid,pk,default:gen_random_uuid()"`
 	Name        string
 	Description string
+	Visability  ShareSettings
 	Memebers    []User `bun:"m2m:user_to_teams,join:Team=User"`
 	Links       []Link `bun:"m2m:team_links,join:Team=Link"`
 }

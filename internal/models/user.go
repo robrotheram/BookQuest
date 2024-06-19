@@ -46,22 +46,24 @@ func UpdateUser(db *bun.DB, user User) error {
 	return err
 }
 func UserGetLinks(db *bun.DB, id uuid.UUID) ([]Link, error) {
-	user := User{}
+	links := []Link{}
 	err := db.NewSelect().
-		Model(&user).
-		Where("id = ?", id).
-		Relation("Links").
+		Model(&links).
+		Join("INNER JOIN user_to_links utl ON utl.link_id = link.id").
+		Where("utl.user_id = ?", id).
+		Order("link.title ASC").
 		Scan(context.Background())
-	return user.Links, err
+	return links, err
 }
 
 func UserGetFavorites(db *bun.DB, id uuid.UUID) ([]Link, error) {
-	user := User{}
+	links := []Link{}
 	err := db.NewSelect().
-		Model(&user).
-		Where("id = ?", id).
-		Relation("Favourites").
+		Model(&links).
+		Join("INNER JOIN favourite_links fl ON fl.link_id = link.id").
+		Where("fl.user_id = ?", id).
+		Order("link.title ASC").
 		Scan(context.Background())
 
-	return user.Favourites, err
+	return links, err
 }

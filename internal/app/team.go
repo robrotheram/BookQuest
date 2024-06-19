@@ -3,18 +3,31 @@ package app
 import (
 	"BookQuest/internal/auth"
 	"BookQuest/internal/models"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
+	"sort"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 )
 
 type TeamEditData struct {
-	Team        models.Team
-	Permissions []models.TeamPermission
-	Memebers    []models.UserToTeam
+	Team              models.Team
+	CurrentPermission models.TeamPermission
+	Visability        []models.ShareSettings
+	Permissions       []models.TeamPermission
+	Memebers          []models.UserToTeam
+}
+
+func getPermission(user models.User, perms []models.UserToTeam) (models.TeamPermission, error) {
+	for _, perm := range perms {
+		if perm.User.Id == user.Id {
+			return perm.Permission, nil
+		}
+	}
+	return "", fmt.Errorf("no Permission found for team")
 }
 
 func (app *App) HandleTeamPage(w http.ResponseWriter, r *http.Request) {
@@ -23,14 +36,25 @@ func (app *App) HandleTeamPage(w http.ResponseWriter, r *http.Request) {
 
 	team, _ := models.GetTeam(app.db, id)
 	users, _ := models.GetTeamPermissions(app.db, id)
-	app.RenderPage(w, "edit_team_dashboard", user, TeamEditData{
-		Team:     team,
-		Memebers: users,
+	perm, _ := getPermission(user, users)
+	sort.Slice(users, func(i, j int) bool {
+		return users[i].User.Email < users[j].User.Email
+	})
+	err := app.RenderPage(w, "edit_team_dashboard", user, TeamEditData{
+		Team:              team,
+		Memebers:          users,
+		CurrentPermission: perm,
+		Visability: []models.ShareSettings{
+			models.PUBLIC,
+			models.PRIVATE,
+		},
 		Permissions: []models.TeamPermission{
 			models.OWNER,
 			models.MEMBER,
 		},
 	})
+
+	fmt.Println(err)
 }
 
 func (app *App) HandleTeamMemberAdd(w http.ResponseWriter, r *http.Request) {
@@ -60,6 +84,9 @@ func (app *App) HandleTeamMemberAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	users, _ := models.GetTeamPermissions(app.db, team.Id.String())
+	sort.Slice(users, func(i, j int) bool {
+		return users[i].User.Email < users[j].User.Email
+	})
 	app.RenderComponent(w, "team_members", TeamEditData{
 		Memebers: users,
 		Permissions: []models.TeamPermission{
@@ -130,6 +157,9 @@ func (app *App) HandleTeamMemberEdit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	users, _ := models.GetTeamPermissions(app.db, team.Id.String())
+	sort.Slice(users, func(i, j int) bool {
+		return users[i].User.Email < users[j].User.Email
+	})
 	app.RenderComponent(w, "team_members", TeamEditData{
 		Team:     team,
 		Memebers: users,
@@ -142,7 +172,12 @@ func (app *App) HandleTeamMemberEdit(w http.ResponseWriter, r *http.Request) {
 
 func (app *App) HandleCreateTeamPage(w http.ResponseWriter, r *http.Request) {
 	user, _ := auth.GetUser(r)
-	app.RenderPage(w, "create_team_dashboard", user, nil)
+	app.RenderPage(w, "create_team_dashboard", user, TeamEditData{
+		Visability: []models.ShareSettings{
+			models.PUBLIC,
+			models.PRIVATE,
+		},
+	})
 }
 
 func (app *App) HandleTeamCreate(w http.ResponseWriter, r *http.Request) {

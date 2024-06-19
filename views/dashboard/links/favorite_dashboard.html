@@ -29,7 +29,7 @@
                 </div>
             </div>
         </div>
-        <div class="relative w-full overflow-auto">
+        <div class="relative w-full overflow-auto" id="search-results">
             {{template "link_fav_table" .}}
         </div>
     </section>
@@ -37,6 +37,12 @@
 {{end}}
 
 {{define "link_fav_table"}}
+{{if lt (len .Links) 1}}
+<div class="p-8">
+    <span class="h-96 block">{{template "not_found_icon"}}</span>
+    <h1 class="text-center mt-4 text-lg">No results found</h1>
+</div>
+{{else}}
     {{range .Links}}
     <div id="link-{{.Id}}" class="grid grid-cols-1 lg:grid-cols-[24rem_1fr_1fr_100px] justify-between border-b transition-colors" >
         <div class="p-4 align-middle  flex items-center gap-2 w-full lg:w-96">
@@ -44,25 +50,26 @@
             style="aspect-ratio: 24 / 24; object-fit: cover;" />
             <div class="font-medium">{{.Title}}</div>
         </div>
-        <div class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+        <div class="p-4 align-middle">
             <div class="text-gray-500 dark:text-gray-400">
                 <a href="/link/{{.Id}}">{{.Url}}</a>
             </div>
         </div>
-        <div class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+        <div class="p-4 align-middle">
             <div class="line-clamp-2 text-gray-500 dark:text-gray-400">
                 {{.Description}}
             </div>
         </div>
-        <div class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+        <div class="p-4 align-middle flex items-center">
             <div class="flex items-center gap-2">
                 <button hx-delete="/dashboard/favourites/{{.Id}}" hx-confirm="Are you sure you want to unfavorite this link?"
                     hx-target="#link-{{.Id}}" hx-swap="outerHTML:remove"
-                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                    class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2  hover:bg-zinc-900 hover:text-white  border border-gray-200 rounded-md p-2">
                     {{template "delete_icon"}}
                 </button>
             </div>
         </div>
     </div>
+    {{end}}
     {{end}}
 {{end}}

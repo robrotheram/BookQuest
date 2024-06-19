@@ -4,9 +4,11 @@ import (
 	"BookQuest/internal/auth"
 	"BookQuest/internal/models"
 	"net/http"
+	"sort"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/sagikazarmark/slog-shim"
+	"github.com/google/uuid"
+	"github.com/uptrace/bun"
 )
 
 type DashboadPage struct {
@@ -76,16 +78,23 @@ func (app *App) HandleLinkDelete(w http.ResponseWriter, r *http.Request) {
 
 func (app *App) HandleTeamDashboard(w http.ResponseWriter, r *http.Request) {
 	user, _ := auth.GetUser(r)
-
-	teams, err := models.GetTeamsByUser(app.db, user.Id)
-	slog.Warn("%v", err)
+	teams, _ := getTeams(app.db, user.Id)
 	app.RenderPage(w, "teams_dashboard", user, teams)
 }
 
 func (app *App) HandleTeamFilter(w http.ResponseWriter, r *http.Request) {
 	user, _ := auth.GetUser(r)
 	query := r.FormValue("search")
-	teams, err := models.GetTeamsByUser(app.db, user.Id)
-	slog.Warn("%v", err)
+	teams, _ := getTeams(app.db, user.Id)
 	app.RenderComponent(w, "team_cards", models.FilterTeams(teams, query))
+}
+
+func getTeams(db *bun.DB, id uuid.UUID) ([]models.Team, error) {
+	teams, _ := models.GetPublicTeams(db)
+	userTeams, _ := models.GetTeamsByUser(db, id)
+	teams = append(teams, userTeams...)
+	sort.Slice(teams, func(i, j int) bool {
+		return teams[i].Name < teams[j].Name
+	})
+	return teams, nil
 }

@@ -3,6 +3,7 @@ package app
 import (
 	"BookQuest/internal/models"
 	"BookQuest/internal/render"
+	"compress/gzip"
 	"net/http"
 
 	"github.com/uptrace/bun"
@@ -21,9 +22,6 @@ func NewApp(db *bun.DB, template *render.Render) *App {
 }
 
 func (app *App) RenderComponent(w http.ResponseWriter, name string, data any) error {
-	w.Header().Add("Content-Type", "text/html")
-	w.Header().Add("Content-Encoding", "gzip")
-	
 	return app.template.Render(w, name, data)
 }
 
@@ -36,8 +34,10 @@ type PageData struct {
 func (app *App) RenderPage(w http.ResponseWriter, name string, user models.User, data any) error {
 	w.Header().Add("Content-Type", "text/html")
 	w.Header().Add("Content-Encoding", "gzip")
+	gz := gzip.NewWriter(w)
+	defer gz.Close()
 
-	return app.template.Render(w, name, PageData{
+	return app.template.Render(gz, name, PageData{
 		User:       user,
 		Data:       data,
 		LiveReload: (app.template.Reload != nil),

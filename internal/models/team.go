@@ -39,6 +39,17 @@ func GetTeams(db *bun.DB) []Team {
 	return team
 }
 
+func GetPublicTeams(db *bun.DB) ([]Team, error) {
+	teams := []Team{}
+	err := db.NewSelect().
+		Model(&teams).
+		Where("visability = ?", PUBLIC).
+		Relation("Memebers").
+		Relation("Links").
+		Scan(context.Background())
+	return teams, err
+}
+
 func UpdateTeam(db *bun.DB, team Team) error {
 	_, err := db.NewUpdate().Model(&team).WherePK().Exec(context.Background())
 	return err
@@ -56,6 +67,7 @@ func GetTeamsByUser(db *bun.DB, userId uuid.UUID) ([]Team, error) {
 		Relation("Memebers").
 		Join("JOIN user_to_teams AS ut ON ut.team_id = team.id").
 		Where("ut.user_id = ?", userId).
+		Order("team.name ASC").
 		Scan(context.Background())
 	return teams, err
 }
@@ -133,6 +145,7 @@ func ModifyUserToTeam(db *bun.DB, user string, teamId string, permission TeamPer
 func (t *Team) Update(team Team) {
 	t.Name = team.Name
 	t.Description = team.Description
+	t.Visability = team.Visability
 }
 
 func FilterTeams(teams []Team, query string) []Team {

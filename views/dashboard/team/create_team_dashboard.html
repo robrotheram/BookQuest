@@ -29,7 +29,7 @@
             Team Name
           </label>
           <input
-            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            class="block w-full appearance-none rounded-md border border-gray-300 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
             name="name" placeholder="Enter team name"/>
         </div>
         <div class="space-y-2">
@@ -39,12 +39,28 @@
             Description
           </label>
           <textarea
-            class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[100px]"
+          class="block w-full appearance-none rounded-md border border-gray-300 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 min-h-[100px]"
             name="description" placeholder="Enter team description"></textarea>
+        </div>
+        <div>
+          <label for="visability" class="block text-sm font-medium text-gray-700">
+              Shareing
+          </label>
+          <div class="mt-1">
+              <select
+              class="block w-full appearance-none rounded-md border border-gray-300 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                  onchange="onShareingChange(this)"
+                  name="visability"
+              >
+                  {{range .Visability }}
+                    <option value="{{.}}">{{.| ShareingFormat}}</option>  
+                  {{ end }}
+              </select>
+          </div>
         </div>
         <section class="flex justify-end">
           <button
-            class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 rounded-md"
+            class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-zinc-900 hover:text-white h-10 px-8 py-2 rounded-md"
             type="submit">
             Create
           </button>

@@ -45,14 +45,21 @@
                         hx-post="/dashboard/teams" hx-trigger="input changed delay:500ms, search"
                         hx-target="#search-results" hx-indicator=".htmx-indicator"/>
 
-                    <a href="/dashboard/team" class="whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 rounded-md">
+                    <a href="/dashboard/team" class="whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-zinc-900 hover:text-white h-10 px-4 py-2 rounded-md">
                         Create Team
                     </a>
                 </div>
             </div>
         </div>
         <div id="search-results" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-4">
-           {{template "team_cards" .}}
+          {{if gt (len .) 0}}
+                {{template "team_cards" .}}
+            {{else}}
+            <div class="p-8">
+                    <span class="h-96 block">{{template "not_found_icon"}}</span>
+                    <h1 class="text-center mt-4 text-lg">No results found</h1>
+            </div>
+            {{end}}
         </div>
     </section>
 </main>

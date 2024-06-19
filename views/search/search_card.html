@@ -14,7 +14,7 @@
     <div data-orientation="horizontal" role="none" class="shrink-0 bg-gray-100 h-[1px] w-full mb-2"></div>
     <section class="flex justify-between">
         <div class="flex flex-col items-start gap-2 pb-6">
-            {{template "share_section" .}}
+            {{template "share_section" .Sharing}}
             <div class="flex items-center gap-2 px-6">
                 {{template "calendar_icon"}}
                 <span class="text-sm text-gray-500">
@@ -30,17 +30,19 @@
 
 {{define "share_section"}}
 <div class="flex items-center gap-2 px-6">
-    {{if eq .Sharing "TEAM"}}
+    {{template "share_section_icon"}}
+    <span class="text-sm text-gray-500 capitalize">{{. |ShareingFormat}}</span>
+</div>
+{{end}}
+
+{{define "share_section_icon"}}
+    {{if eq . "TEAM"}}
     {{template "team_icon"}}
-    <span class="text-sm text-gray-500">Team</span>
-    {{else if eq .Sharing "PRIVATE"}}
+    {{else if eq . "PRIVATE"}}
     {{template "private_icon"}}
-    <span class="text-sm text-gray-500">Private</span>
     {{else}}
     {{template "public_icon"}}
-    <span class="text-sm text-gray-500">Public</span>
     {{end}}
-</div>
 {{end}}
 
 
