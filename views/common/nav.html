@@ -2,15 +2,15 @@
 <nav class="p-4 drop-shadow-lg" style="background-color: rgba(0, 0, 0, 0.5);">
     <div class="max-w-screen-xl mx-auto flex justify-between items-center">
         <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-            <img src="/static/img/logo.png" class="h-14" alt="BookMarker Logo" />
-            <span class="self-center text-white text-2xl font-semibold whitespace-nowrap">BookMarker</span>
+            <img src="/static/img/logo.png" class="h-14" alt="BookQuest Logo" />
+            <span class="self-center text-white text-2xl font-semibold whitespace-nowrap">BookQuest</span>
         </a>
         <div class="flex gap-2">
             {{/*  <a href="/dashboard/link" class="bg-green-500 text-white font-semibold px-4 py-2 rounded-full shadow-md">
                 New Link
             </a>  */}}
             <a href="/dashboard">
-                <img src="{{.Picture}}" width="42rem" height="42rem"/>
+                <img src="{{.Picture}}" width="42rem" height="42rem" alt="{{.Username}}"/>
             </a>
         </div>
     </div>

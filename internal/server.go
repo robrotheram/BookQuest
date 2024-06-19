@@ -70,6 +70,8 @@ func NewServer(static, tmplateFS fs.FS) *chi.Mux {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+	r.Use(middleware.Compress(5))
+
 	r.Use(cors.Handler(cors.Options{
 		AllowOriginFunc: func(r *http.Request, origin string) bool { return true },
 		AllowedMethods:  []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
@@ -83,7 +85,7 @@ func NewServer(static, tmplateFS fs.FS) *chi.Mux {
 		r.Use(mw)
 		r.Get("/", app.HandleHomepage)
 		r.Get("/search", app.HandleSearch)
-		
+
 		r.Get("/link/{id}", app.HandleLinkedUsed)
 		r.Post("/link/{id}/fav", app.HandleFavourite)
 		r.Post("/link/{id}", app.HandleFavourite)

@@ -30,38 +30,33 @@
             </div>
         </div>
         <div class="relative w-full overflow-auto">
-            <table class="w-full caption-bottom text-sm">
-                {{template "link_table_header"}}
-                <tbody class="[&amp;_tr:last-child]:border-0" id="search-results">
-                    {{template "link_table" .}}
-                </tbody>
-            </table>
+            {{template "link_table" .}}
         </div>
     </section>
 </main>
 {{end}}
 {{define "link_table"}}
 {{range .Links}}
-<tr id="link-{{.Id}}" class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 flex items-center gap-2 w-96">
+<div id="link-{{.Id}}" class="grid grid-cols-1 lg:grid-cols-[24rem_1fr_1fr_100px] justify-between border-b transition-colors" >
+    <div class="p-4 align-middle  flex items-center gap-2 w-full lg:w-96">
         <img src="{{.Icon}}" alt="Blog Logo" width="24" height="24" class="h-6 w-6"
         style="aspect-ratio: 24 / 24; object-fit: cover;" />
         <div class="font-medium">{{.Title}}</div>
-    </td>
-    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+    </div>
+    <div class="p-4 align-middle ">
         <a class="line-clamp-2 text-gray-500 dark:text-gray-400" href="/link/{{.Id}}">
             {{.Url}}
         </a>
-    </td>
-    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+    </div>
+    <div class="p-4 align-middle ">
         <div class="line-clamp-2 text-gray-500 dark:text-gray-400">
             {{.Description}}
         </div>
-    </td>
-    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-        <div class="flex items-center gap-2">
+    </div>
+    <div class="p-4 align-middle ">
+        <div class="flex items-center gap-2 justify-between lg:justify-end">
             <a href="/dashboard/link/{{.Id}}"
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg- hover:text-accent-foreground h-10 w-10">
                 {{template "edit_icon"}}
             </a>
             <button 
@@ -73,7 +68,7 @@
             {{template "delete_icon"}}
         </button>
         </div>
-    </td>
-</tr>
+    </div>
+</div>
 {{end}}
 {{end}}

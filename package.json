@@ -1,8 +1,8 @@
 {
   "scripts": {
     "server": "~/go/bin/air --build.exclude_dir node_modules,database,tmp,views ",
-    "tailwind:dev": "npx tailwindcss -i ./main.css -o ./static/css/main.css --watch",
-    "tailwind": "npx tailwindcss -i ./main.css -o ./static/css/main.css",
+    "tailwind:dev": "npx tailwindcss -i ./main.css -o ./static/css/main.css --watch --minify",
+    "tailwind": "npx tailwindcss -i ./main.css -o ./static/css/main.css --minify",
     "dev": "npm run server & npm run tailwind:dev"
   },
   "devDependencies": {

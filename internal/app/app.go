@@ -3,7 +3,7 @@ package app
 import (
 	"BookQuest/internal/models"
 	"BookQuest/internal/render"
-	"io"
+	"net/http"
 
 	"github.com/uptrace/bun"
 )
@@ -20,7 +20,10 @@ func NewApp(db *bun.DB, template *render.Render) *App {
 	}
 }
 
-func (app *App) RenderComponent(w io.Writer, name string, data any) error {
+func (app *App) RenderComponent(w http.ResponseWriter, name string, data any) error {
+	w.Header().Add("Content-Type", "text/html")
+	w.Header().Add("Content-Encoding", "gzip")
+	
 	return app.template.Render(w, name, data)
 }
 
@@ -30,7 +33,10 @@ type PageData struct {
 	LiveReload bool
 }
 
-func (app *App) RenderPage(w io.Writer, name string, user models.User, data any) error {
+func (app *App) RenderPage(w http.ResponseWriter, name string, user models.User, data any) error {
+	w.Header().Add("Content-Type", "text/html")
+	w.Header().Add("Content-Encoding", "gzip")
+
 	return app.template.Render(w, name, PageData{
 		User:       user,
 		Data:       data,

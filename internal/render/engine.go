@@ -2,6 +2,7 @@ package render
 
 import (
 	"BookQuest/internal/models"
+	"compress/gzip"
 	"crypto/sha256"
 	"encoding/hex"
 	"io"
@@ -107,7 +108,9 @@ func (render *Render) watch() {
 }
 
 func (render *Render) Render(w io.Writer, name string, data any) error {
-	return render.Templates.ExecuteTemplate(w, name, data)
+	gz := gzip.NewWriter(w)
+	defer gz.Close()
+	return render.Templates.ExecuteTemplate(gz, name, data)
 }
 
 func NewRender(mux *chi.Mux, templateFS fs.FS, liveReload bool) *Render {
