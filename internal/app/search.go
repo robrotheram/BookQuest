@@ -18,15 +18,15 @@ type SearchPage struct {
 func (app *App) HandleSearch(w http.ResponseWriter, r *http.Request) {
 	user, _ := auth.GetUser(r)
 	query := r.URL.Query().Get("q")
-	search := r.URL.Query().Get("search")
-	if len(search) > 0 {
-		query = search
-	}
 	links, _ := QueryLinks(app.db, query, user.Id.String())
 	if len(links) == 1 {
 		go models.UpdateUserLinkMeta(app.db, links[0].Id.String(), user.Id)
 		http.Redirect(w, r, links[0].Url, http.StatusTemporaryRedirect)
 		return
+	}
+	if len(r.URL.Query().Get("search")) > 0 {
+		query = r.URL.Query().Get("search")
+		links, _ = QueryLinks(app.db, query, user.Id.String())
 	}
 	app.RenderPage(w, "search", user, SearchPage{
 		Form: FormData{

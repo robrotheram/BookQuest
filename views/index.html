@@ -3,7 +3,7 @@
 <html lang="en">
 {{template "head" .}}
 <body class="search-bg">
-    {{template "nav" .User}}
+    {{template "nav" .}}
     {{template "homepage_content" .Data}}
     {{template "footer"}}
 </body>
@@ -11,8 +11,8 @@
 {{end}}
 
 {{define "homepage_content"}}
-<main class="flex-1">
-    <section class="w-full py-12 md:py-24 flex justify-center">
+<main class="flex-1 flex flex-col">
+    <section class="w-full py-12 md:py-24 flex justify-center flex-grow">
         <div class="container px-4 md:px-6 ">
             <div class="mx-auto max-w-xl space-y-4 text-center">
                 <h1 class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gray-50">
@@ -28,7 +28,7 @@
                         class="flex h-10 w-full rounded-md border-input text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm focus:ring-0 focus:outline-none file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 flex-1 rounded-l-md border-0 py-2 px-4  bg-gray-950 text-gray-50"
                         placeholder="Search for links..."  
                         type="search" 
-                        name="q"
+                        name="search"
                     />
                     <button
                         class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors disabled:pointer-events-none disabled:opacity-50 hover:bg-zinc-900 hover:text-white h-10 px-4 py-2 rounded-r-md text-gray-400 hover:bg-gray-200 hover:text-gray-950">
@@ -44,8 +44,7 @@
         </div>
     </section>
     <section class="w-full py-12 md:py-24 flex justify-center">
-
-        <div class="container  px-4 md:px-6">
+        <div class="container xl:  px-4 md:px-6">
             <div class="flex items-center justify-between py-6">
                 <h2 class="text-2xl font-bold text-gray-50">Top Links</h2>
             </div>

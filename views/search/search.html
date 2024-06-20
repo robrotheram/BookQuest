@@ -3,34 +3,18 @@
 <html lang="en">
 {{template "head" .}}
 
-<body class="search-bg">
-  {{template "nav" .User}}
-  {{template "search_content" .Data}}
+<body class="search-bg flex flex-col ">
+  {{template "nav" .}}
+  <main class="flex flex-col grow overflow-auto w-full">
+    <div class="p-4 w-full max-w-screen-lg mx-auto space-y-4">
+      {{range .Data.Results}}
+        {{template "search_card" . }}
+      {{end}}
+    </div>
+  </main>
   {{template "footer"}}
 </body>
 </html>
-{{end}}
-
-{{define "search_content"}}
-<main>
-  <div id="searchbar" class="sticky -top-1 py-0 ease-in duration-200">
-    {{template "search_bar" .}}
-  </div>
-  <script type="text/javascript">
-      const stickyElm = document.getElementById('searchbar')
-      const observer = new IntersectionObserver(
-          ([e]) => e.target.classList.toggle('bg-black', e.intersectionRatio < 1),
-          { threshold: [1] }
-      );
-      observer.observe(stickyElm)
-  </script>
-
-  <div class="p-4 max-w-screen-xl mx-auto space-y-4">
-    {{range .Results}}
-      {{template "search_card" . }}
-    {{end}}
-  </div>
-</main>
 {{end}}
 
 

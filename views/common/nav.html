@@ -1,16 +1,30 @@
 {{define "nav"}}
-<nav class="p-4 drop-shadow-lg" style="background-color: rgba(0, 0, 0, 0.5);">
-    <div class="max-w-screen-xl mx-auto flex justify-between items-center">
-        <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+<nav class="p-4 drop-shadow-lg" style="background-color: rgba(0, 0, 0, 1);">
+    <div class="mx-auto flex justify-between items-center gap-4">
+        <a href="/" class="hidden lg:flex items-center space-x-3 rtl:space-x-reverse w-14">
             <img src="/static/img/apple-icon.png" class="h-14" alt="BookQuest Logo" />
             <span class="self-center text-white text-2xl font-semibold whitespace-nowrap">BookQuest</span>
         </a>
-        <div class="flex gap-2">
-            {{/*  <a href="/dashboard/link" class="bg-green-500 text-white font-semibold px-4 py-2 rounded-full shadow-md">
-                New Link
-            </a>  */}}
+        {{if .Data.Form.Value}}
+        <form action="search" method="get"
+            class="flex w-full max-w-4xl items-center rounded-md p-2 bg-gray-900 shadow-sm focus-within:ring-1 focus-within:ring-gray-400 focus-within:ring-offset-2 focus-within:ring-offset-gray-800">
+            <input
+                class="flex h-10 w-full rounded-md border-input text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm focus:ring-0 focus:outline-none file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 flex-1 rounded-l-md border-0 py-2 px-4  bg-gray-900 text-gray-50"
+                placeholder="Search for links..." type="search" name="search" value="{{.Data.Form.Value}}" />
+            <button
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors disabled:pointer-events-none disabled:opacity-50  h-10 px-4 py-2 rounded-r-md text-gray-400 hover:bg-gray-200 hover:text-gray-950">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="h-5 w-5">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.3-4.3"></path>
+                </svg>
+            </button>
+        </form>
+        {{end}}
+        <div class="flex gap-2 w-14">
             <a href="/dashboard">
-                <img src="{{.Picture}}" width="42rem" height="42rem" alt="{{.Username}}"/>
+                <img src="{{.User.Picture}}" width="50rem"  alt="{{.User.Username}}" />
             </a>
         </div>
     </div>
