@@ -1,13 +1,13 @@
 {{define "nav"}}
 <nav class="p-4 drop-shadow-lg" style="background-color: rgba(0, 0, 0, 1);">
     <div class="mx-auto flex justify-between items-center gap-4">
-        <a href="/" class="hidden lg:flex items-center space-x-3 rtl:space-x-reverse w-14">
-            <img src="/static/img/apple-icon.png" class="h-14" alt="BookQuest Logo" />
-            <span class="self-center text-white text-2xl font-semibold whitespace-nowrap">BookQuest</span>
+        <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse w-14">
+            <img src="/static/img/apple-icon.png" alt="BookQuest Logo" />
+            <span class="hidden lg:block self-center text-white text-2xl font-semibold whitespace-nowrap">BookQuest</span>
         </a>
         {{if .Data.Form.Value}}
         <form action="search" method="get"
-            class="flex w-full max-w-4xl items-center rounded-md p-2 bg-gray-100 shadow-inner focus-within:ring-1 focus-within:ring-gray-400 focus-within:ring-offset-2 focus-within:ring-offset-gray-800">
+            class="flex w-full max-w-screen-lg items-center rounded-md p-1 lg:p-2 bg-gray-100 shadow-inner focus-within:ring-1 focus-within:ring-gray-400 focus-within:ring-offset-2 focus-within:ring-offset-gray-800">
             <input
                 class="flex h-10 w-full rounded-md border-input text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm focus:ring-0 focus:outline-none file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 flex-1 rounded-l-md border-0 py-2 px-4  bg-gray-100 text-gray-950"
                 placeholder="Search for links..." type="search" name="search" value="{{.Data.Form.Value}}" />

@@ -22,10 +22,11 @@ body {
 }
 
 .search-bg {
-    background: url('https://tse1.mm.bing.net/th/id/OIG2.JznThGtCBZgI_sWefrWh?pid=ImgGn');
+    background: url('/static/css/bg.jpeg');
     background-repeat: no-repeat;
     background-color: #211f31;
     background-size: cover;
+    backdrop-filter: blur(5px);
 }
 
 main {
