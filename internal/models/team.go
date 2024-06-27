@@ -50,6 +50,31 @@ func GetPublicTeams(db *bun.DB) ([]Team, error) {
 	return teams, err
 }
 
+func GetTeamsForUser(db *bun.DB, userID uuid.UUID) ([]Team, error) {
+	var teams []Team
+
+	// Query for public teams
+	publicTeams := db.NewSelect().
+		Model((*Team)(nil)).
+		Where("team.visability = ?", PUBLIC)
+
+	// Query for private teams and public teams the user is in
+	userTeams := db.NewSelect().
+		Model((*Team)(nil)).
+		Join("JOIN user_to_teams AS ut ON ut.team_id = team.id").
+		Where("ut.user_id = ?", userID).
+		Where("team.visability IN (?, ?)", PRIVATE, PUBLIC)
+
+	// Union the two queries
+	err := db.NewSelect().
+		With("public_teams", publicTeams).
+		With("user_teams", userTeams).
+		TableExpr("(SELECT * FROM public_teams UNION SELECT * FROM user_teams) AS t").
+		Scan(context.Background(), &teams)
+
+	return teams, err
+}
+
 func UpdateTeam(db *bun.DB, team Team) error {
 	_, err := db.NewUpdate().Model(&team).WherePK().Exec(context.Background())
 	return err

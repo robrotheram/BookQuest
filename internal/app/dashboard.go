@@ -90,9 +90,7 @@ func (app *App) HandleTeamFilter(w http.ResponseWriter, r *http.Request) {
 }
 
 func getTeams(db *bun.DB, id uuid.UUID) ([]models.Team, error) {
-	teams, _ := models.GetPublicTeams(db)
-	userTeams, _ := models.GetTeamsByUser(db, id)
-	teams = append(teams, userTeams...)
+	teams, _ := models.GetTeamsForUser(db, id)
 	sort.Slice(teams, func(i, j int) bool {
 		return teams[i].Name < teams[j].Name
 	})
